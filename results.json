@@ -1,0 +1,289 @@
+{
+  "test_date": "2026-10-15",
+  "mode": "Chromium DOM set_content + touch simulation (HTTP navigation blocked in runtime)",
+  "actual_ipad_tested": false,
+  "cases": 56,
+  "passed": 56,
+  "results": [
+    {
+      "name": "desktop: 2 lessons",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: both lessons visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: library search filter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: no results feedback",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: clearing search resets",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: library no horizontal scroll",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS script runs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS numerical anchor",
+      "pass": true,
+      "detail": "100.06318"
+    },
+    {
+      "name": "desktop: GNSS uncertainty",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS slider input updates number",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS slider updates graphic",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS numeric field",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS plus button",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS reset",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: GNSS JS errors",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "desktop: GNSS no horizontal scroll",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling script runs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling analytic baseline",
+      "pass": true,
+      "detail": "51.42702788313895"
+    },
+    {
+      "name": "desktop: cooling at t0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling cursor updated",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling numeric field",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: larger k cools faster",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling plot updated",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling plus button",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling reset",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: mastery gate",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop: cooling JS errors",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "desktop: cooling no horizontal scroll",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: 2 lessons",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: both lessons visible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: library search filter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: no results feedback",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: clearing search resets",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: library no horizontal scroll",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS script runs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS numerical anchor",
+      "pass": true,
+      "detail": "100.06318"
+    },
+    {
+      "name": "touch: GNSS uncertainty",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS slider input updates number",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS slider updates graphic",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS numeric field",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS plus button",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS reset",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: GNSS JS errors",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "touch: GNSS no horizontal scroll",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling script runs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling analytic baseline",
+      "pass": true,
+      "detail": "51.42702788313895"
+    },
+    {
+      "name": "touch: cooling at t0",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling cursor updated",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling numeric field",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: larger k cools faster",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling plot updated",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling plus button",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling reset",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: mastery gate",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "touch: cooling JS errors",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "touch: cooling no horizontal scroll",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

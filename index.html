@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>IX Learning Studio · GNSS Epoch Propagation · iPad V2</title>
+<style>
+:root{--ink:#162c38;--sub:#536a74;--bg:#f6f8f7;--paper:#fff;--sea:#176e71;--soft:#e6f3f1;--coral:#b65341;--gold:#f8eaca;--border:#d5e2e4;--focus:#096a9a}
+*{box-sizing:border-box} html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font-family:system-ui,'Noto Sans Thai',Tahoma,sans-serif;color:var(--ink);font-size:16px;line-height:1.65}button,input{font:inherit} button{cursor:pointer} button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:3px}a{color:var(--sea)}
+.hero{background:#123943;color:#f9fbf6;padding:36px max(16px,calc((100vw - 1120px)/2)) 32px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font:600 12px system-ui;color:#b6e5dd}.hero h1{font-size:clamp(27px,4vw,45px);line-height:1.2;max-width:800px;margin:10px 0}.hero p{max-width:780px;color:#e2eeee}.pill{display:inline-block;border:1px solid #87b6b4;padding:3px 12px;border-radius:99px;color:#d2f0e7;font-size:13px;margin-top:9px}main{width:min(1120px,calc(100% - 32px));margin:24px auto 72px}.topnav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}.topnav a{border:1px solid var(--border);background:white;text-decoration:none;padding:5px 12px;border-radius:30px;font-size:14px}.card{background:var(--paper);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 18px #1a39450b}.card h2{margin:0 0 12px;line-height:1.35;font-size:24px}.card h3{margin:0 0 8px;font-size:18px}.hint{color:var(--sub);font-size:14px}.intro{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}.formula{border-left:4px solid var(--sea);background:#f0f6f5;padding:18px;border-radius:12px;font-size:20px;display:flex;flex-direction:column;gap:8px}.formula small{font-size:13px;color:var(--sub)} .micro{display:grid;gap:9px} .micro div{padding:10px 13px;background:#f6f8f8;border-radius:11px}
+.workspace{display:grid;grid-template-columns:minmax(275px,.82fr) minmax(0,1.35fr);gap:18px;align-items:start}.control label{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-weight:600}.control output{color:var(--sea);font-variant-numeric:tabular-nums;white-space:nowrap}.control input[type=range]{width:100%;accent-color:var(--sea);cursor:pointer;margin:7px 0 17px;min-height:20px}.columns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tile{background:var(--soft);padding:13px;border-radius:12px;min-width:0}.tile .axis{color:var(--sub);font-size:12px}.tile strong{font-size:clamp(16px,2.3vw,23px);display:block;font-variant-numeric:tabular-nums;letter-spacing:-.02em}.tile .unit{color:var(--sub);font-size:12px}.delta{background:#fff4e8}.delta strong{color:#813e27}.subhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 0 10px}button{border:none;border-radius:12px;background:var(--sea);color:white;padding:10px 16px;font-weight:650}button.secondary{background:#e8f0f0;color:#164a4b}button[disabled]{opacity:.55;cursor:not-allowed}.compare{margin:12px 0;padding:15px 18px;border:1px solid var(--border);border-radius:12px}.compare .bar{position:relative;background:#dce8e7;border-radius:20px;height:14px;margin:15px 0 8px}.compare .bar div{background:var(--coral);height:100%;border-radius:20px;transition:width .2s ease;max-width:100%}.compare .barlabel{display:flex;justify-content:space-between;gap:10px;color:var(--sub);font-size:13px}.canvaswrap{background:#f9fbfa;border:1px solid #dce5e3;border-radius:14px;padding:6px}.canvaswrap svg{display:block;width:100%;height:auto}.metricline{border:1px dashed #b0c8cb;background:#f5faf9;border-radius:12px;padding:13px 16px;margin:12px 0;font-variant-numeric:tabular-nums}.note{padding:13px 16px;border-left:4px solid #b76a45;background:#fff4e8;border-radius:0 9px 9px 0}.foot{font-size:13px;color:var(--sub)}.qa{border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:10px}.qa fieldset{border:0;padding:0;margin:0}.qa legend{font-weight:650;margin-bottom:8px}.qa label{display:block;padding:5px 0;cursor:pointer}.qa input{margin-right:8px}.good{color:#13634d}.bad{color:#a33e38}.inputline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.info{background:#ebf3f4;border-radius:11px;padding:12px 16px}.sources a{overflow-wrap:anywhere}.sources li{margin-bottom:7px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:800px){.intro,.workspace{grid-template-columns:1fr}.card{padding:16px}.columns{gap:6px}.tile{padding:10px 7px}.tile strong{font-size:clamp(14px,4vw,22px)}main{width:min(100% - 20px,1120px)}.hero{padding:26px 15px}.control input[type=range]{margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* iPad V2: progressive diagnostics and finger-friendly redundant controls */
+.control input[type=range]{min-height:35px;touch-action:manipulation}
+.slider-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:-8px 0 14px}
+.slider-tools button{border:1px solid var(--border);height:44px;min-width:48px;padding:6px 14px;border-radius:11px;background:#e8f0f0;color:#164a4b;font-size:22px;line-height:1}
+.slider-tools input[type=number]{width:114px;max-width:40%;border:1px solid var(--border);border-radius:11px;padding:8px;background:#fff;color:var(--ink);height:44px;text-align:center;font-variant-numeric:tabular-nums}
+.runtime-status{font-size:14px;line-height:1.5;border-radius:11px;padding:11px 13px;margin:12px 0;border:1px solid #d6b988;background:#fff4dc;color:#6a4410}
+.runtime-ready{border-color:#afd7c2;background:#e9f8ef;color:#17583e}
+.runtime-error{border-color:#efb5b4;background:#fff0f0;color:#8f2727}
+@media(max-width:480px){.slider-tools{justify-content:space-between}.slider-tools input[type=number]{width:140px}}
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="eyebrow">IX LEARNING STUDIO · PILOT 01</div>
+ <h1>พิกัด GNSS เปลี่ยนเมื่อเวลาเปลี่ยนอย่างไร?</h1>
+ <p>ทดลองปรับ <strong>Epoch</strong> และ <strong>Velocity</strong> เพื่อดูพิกัด ENU และความไม่แน่นอนที่เปลี่ยนตามเวลา — จากการอ่าน → ทดลอง → ทดสอบความเข้าใจ</p>
+ <span class="pill">Synthetic data · Local ENU · ไม่ใช่ ITRF transformation</span>
+</header>
+<main>
+<nav class="topnav" aria-label="ข้ามไปยังส่วนต่าง ๆ"><a href="#concept">หลักการ</a><a href="#experiment">ห้องทดลอง</a><a href="#explain">ความหมาย</a><a href="#quiz">Mastery Check</a><a href="#sources">แหล่งอ้างอิง</a></nav>
+<section class="card" id="concept">
+ <h2>01 / หลักการ</h2>
+ <div class="intro">
+  <div><p><strong>คำถาม:</strong> เราใช้พิกัดที่ epoch 2021.93 ไปกับงาน epoch 2026.79 โดยไม่คำนวณเพิ่มเติมได้เสมอหรือไม่?</p><p>ไม่ได้เสมอไป จุดรังวัดอาจเคลื่อนตัวตามเวลา ในแบบจำลองง่ายที่ความเร็วคงที่ เราคำนวณการเปลี่ยนพิกัดจาก <strong>ความเร็ว × ระยะเวลา</strong> แล้วนำไปบวกกับพิกัดเดิม</p><p class="hint">ข้อเท็จจริง → กลไก → คำนวณ → ตรวจข้อจำกัด เป็นลำดับการเรียนรู้ของบทนี้</p></div>
+  <div class="formula"><div><strong>p(t) = p(t₀) + v × (t − t₀)</strong></div><small>พิกัดเริ่มต้น [m] + ความเร็ว [m/year] × เวลา [year]</small><div style="border-top:1px solid #c5dddd;padding-top:8px"><strong>σE(t) = √(σE₀² + Δt²σvE²)</strong></div><small>1σ เฉพาะแกน East; สมมติ covariance = 0 และ epoch รู้แน่นอน</small></div>
+ </div>
+</section>
+<section class="workspace" id="experiment" aria-labelledby="lab-heading">
+ <div class="card" style="margin:0">
+  <h2 id="lab-heading">02 / ห้องทดลอง <span class="hint">(iPad V2)</span></h2>
+  <div id="js-status" class="runtime-status" role="status" aria-live="polite">⚠️ ยังไม่พบการทำงานของ JavaScript: หากตัวเลื่อนขยับ แต่ตัวเลขไม่เปลี่ยน หน้า Preview อาจบล็อกสคริปต์ ให้เปิดผ่านเว็บไซต์ HTTPS บน Chrome</div>
+  <p class="hint">ลากแถบเลื่อน ใช้ปุ่ม + / − หรือพิมพ์ตัวเลข แล้วสังเกตจำนวนครั้งที่อัปเดตในสถานะระบบ</p>
+  <div class="control"><label for="epoch">Target epoch <output id="epoch-v" for="epoch">2026.79</output></label><input id="epoch" type="range" min="2017" max="2035" step="0.01" value="2026.79"><div class="slider-tools" aria-label="การปรับค่า Target epoch">
+   <button type="button" data-target="epoch" data-dir="-1" aria-label="ลด Target epoch">−</button>
+   <input id="epoch-num" type="number" value="2026.79" min="2017" max="2035" step="0.01" inputmode="decimal" aria-label="กรอก Target epoch">
+   <button type="button" data-target="epoch" data-dir="1" aria-label="เพิ่ม Target epoch">+</button>
+  </div></div>
+  <div class="control"><label for="ve">Velocity East (mm/yr) <output id="ve-v" for="ve">+13</output></label><input id="ve" type="range" min="-50" max="50" step="1" value="13"><div class="slider-tools" aria-label="การปรับค่า Velocity East (mm/yr)">
+   <button type="button" data-target="ve" data-dir="-1" aria-label="ลด Velocity East (mm/yr)">−</button>
+   <input id="ve-num" type="number" value="13" min="-50" max="50" step="1" inputmode="decimal" aria-label="กรอก Velocity East (mm/yr)">
+   <button type="button" data-target="ve" data-dir="1" aria-label="เพิ่ม Velocity East (mm/yr)">+</button>
+  </div></div>
+  <div class="control"><label for="vn">Velocity North (mm/yr) <output id="vn-v" for="vn">−9</output></label><input id="vn" type="range" min="-50" max="50" step="1" value="-9"><div class="slider-tools" aria-label="การปรับค่า Velocity North (mm/yr)">
+   <button type="button" data-target="vn" data-dir="-1" aria-label="ลด Velocity North (mm/yr)">−</button>
+   <input id="vn-num" type="number" value="-9" min="-50" max="50" step="1" inputmode="decimal" aria-label="กรอก Velocity North (mm/yr)">
+   <button type="button" data-target="vn" data-dir="1" aria-label="เพิ่ม Velocity North (mm/yr)">+</button>
+  </div></div>
+  <div class="control"><label for="vu">Velocity Up (mm/yr) <output id="vu-v" for="vu">+2</output></label><input id="vu" type="range" min="-20" max="20" step="1" value="2"><div class="slider-tools" aria-label="การปรับค่า Velocity Up (mm/yr)">
+   <button type="button" data-target="vu" data-dir="-1" aria-label="ลด Velocity Up (mm/yr)">−</button>
+   <input id="vu-num" type="number" value="2" min="-20" max="20" step="1" inputmode="decimal" aria-label="กรอก Velocity Up (mm/yr)">
+   <button type="button" data-target="vu" data-dir="1" aria-label="เพิ่ม Velocity Up (mm/yr)">+</button>
+  </div></div>
+  <div style="border-top:1px solid var(--border);padding-top:14px"><h3>Uncertainty (East)</h3>
+  <div class="control"><label for="s0">σE₀ (mm) <output id="s0-v">5</output></label><input id="s0" type="range" min="0" max="20" value="5" step="0.5"><div class="slider-tools" aria-label="การปรับค่า Initial uncertainty East (mm)">
+   <button type="button" data-target="s0" data-dir="-1" aria-label="ลด Initial uncertainty East (mm)">−</button>
+   <input id="s0-num" type="number" value="5" min="0" max="20" step="0.5" inputmode="decimal" aria-label="กรอก Initial uncertainty East (mm)">
+   <button type="button" data-target="s0" data-dir="1" aria-label="เพิ่ม Initial uncertainty East (mm)">+</button>
+  </div></div>
+  <div class="control"><label for="sv">σvE (mm/year) <output id="sv-v">1.0</output></label><input id="sv" type="range" min="0" max="5" value="1" step="0.1"><div class="slider-tools" aria-label="การปรับค่า Velocity uncertainty East (mm/yr)">
+   <button type="button" data-target="sv" data-dir="-1" aria-label="ลด Velocity uncertainty East (mm/yr)">−</button>
+   <input id="sv-num" type="number" value="1" min="0" max="5" step="0.1" inputmode="decimal" aria-label="กรอก Velocity uncertainty East (mm/yr)">
+   <button type="button" data-target="sv" data-dir="1" aria-label="เพิ่ม Velocity uncertainty East (mm/yr)">+</button>
+  </div></div>
+  </div>
+  <button class="secondary" id="reset" type="button">คืนค่าเริ่มต้น</button>
+  <p class="foot">ค่าที่ตรึงไว้: t₀ = 2021.93, p₀ = (100, 200, 50) m; ENU fixed orientation. ไม่เชื่อมต่ออินเทอร์เน็ตหรือส่งข้อมูลออก</p>
+ </div>
+ <div class="card" style="margin:0">
+  <h2>ผลจากการทดลอง</h2>
+  <div class="info"><span id="time-expl" aria-live="polite">ผ่านไป +4.86 ปี จาก epoch 2021.93</span></div>
+  <div class="subhead"><h3>พิกัด ณ Target epoch</h3><span class="hint">หน่วย: m</span></div>
+  <div class="columns" aria-live="polite" aria-atomic="true">
+   <div class="tile"><div class="axis">East (E)</div><strong id="pe">100.06318</strong><span class="unit">m</span></div>
+   <div class="tile"><div class="axis">North (N)</div><strong id="pn">199.95626</strong><span class="unit">m</span></div>
+   <div class="tile"><div class="axis">Up (U)</div><strong id="pu">50.00972</strong><span class="unit">m</span></div>
+  </div>
+  <div class="subhead"><h3>การเปลี่ยนพิกัด Δp</h3><span class="hint">หน่วย: mm</span></div>
+  <div class="columns" aria-live="polite">
+   <div class="tile delta"><div class="axis">ΔEast</div><strong id="de">+63.18</strong><span class="unit">mm</span></div>
+   <div class="tile delta"><div class="axis">ΔNorth</div><strong id="dn">−43.74</strong><span class="unit">mm</span></div>
+   <div class="tile delta"><div class="axis">ΔUp</div><strong id="du">+9.72</strong><span class="unit">mm</span></div>
+  </div>
+  <div class="subhead"><h3>ภาพการกระจัดแนวราบ (ΔE, ΔN)</h3><span id="scale" class="hint">หน่วยเป็น mm</span></div>
+  <div class="canvaswrap"><svg viewBox="0 0 620 380" role="img" aria-labelledby="plot-title plot-desc">
+   <title id="plot-title">กราฟการเปลี่ยนตำแหน่งแนวราบเทียบจุดตั้งต้น</title><desc id="plot-desc">ลูกศรจากศูนย์ไปยัง displacement ในแกน East และ North ตัวเลขแกนเปลี่ยนตามสเกล</desc>
+   <rect x="0" y="0" width="620" height="380" fill="#fafcfb"/>
+   <g stroke="#dce8e5" stroke-width="1"><path d="M90 65 H530 M90 125 H530 M90 185 H530 M90 245 H530 M90 305 H530 M130 35 V335 M220 35 V335 M310 35 V335 M400 35 V335 M490 35 V335"/></g>
+   <g stroke="#86a4a5" stroke-width="2"><path d="M90 185 H545 M310 330 V30"/></g>
+   <g fill="#4a7376" font-family="system-ui" font-size="15"><text x="548" y="179">+E</text><text x="325" y="29">+N</text><text x="95" y="362">illustration to scale (mm)</text></g>
+   <line id="vector" x1="310" y1="185" x2="400" y2="250" stroke="#b65341" stroke-width="5" stroke-linecap="round"/>
+   <circle cx="310" cy="185" r="7" fill="#176e71" stroke="white" stroke-width="2"/>
+   <circle id="end" cx="400" cy="250" r="9" fill="#b65341" stroke="white" stroke-width="3"/>
+   <rect x="346" y="338" width="260" height="31" rx="11" fill="#e6f3f1"/><text id="endpoint-label" x="476" y="358" text-anchor="middle" font-family="system-ui" font-size="14" fill="#21454c">ΔE +63.18, ΔN −43.74 mm</text>
+  </svg></div>
+  <div class="metricline" aria-live="polite"><strong>1σ ของ E ณ target epoch = <span id="sigma">6.973</span> mm</strong><div class="hint" id="sigma-why">√(5² + 4.86² × 1²) mm</div></div>
+  <div class="note" id="prediction">ลองเลื่อน Target epoch ให้ห่าง t₀ มากขึ้น แล้วสังเกตว่า |displacement| และ σE เปลี่ยนไปอย่างไร</div>
+ </div>
+</section>
+<section class="card" id="explain" style="margin-top:18px">
+ <h2>03 / สิ่งที่เราเรียนรู้</h2><div class="micro"><div><strong>ค่า Epoch เปลี่ยน:</strong> Δt เปลี่ยน จึงเปลี่ยน displacement และ uncertainty จาก velocity</div><div><strong>Velocity เป็นศูนย์:</strong> พิกัดไม่เปลี่ยนในแบบจำลองนี้ แม้เวลาจะผ่านไป</div><div><strong>Epoch ก่อน t₀:</strong> Δt ติดลบ ทิศทางของ displacement จึงกลับกัน</div><div><strong>ข้อจำกัด:</strong> สูตรนี้เป็น Local ENU คงที่ ยังไม่ใช่ ITRF frame transformation และยังไม่รวม post-seismic, seasonal หรือ discontinuities</div></div>
+</section>
+<section class="card" id="quiz">
+ <h2>04 / Mastery Check</h2><p class="hint">ลองตอบก่อนเปิดเฉลย เพื่อทดสอบ mental model ด้วยตนเอง</p>
+ <div class="qa"><fieldset><legend>Q1: หาก Target epoch เท่ากับ 2021.93 จะเกิดอะไรขึ้น?</legend><label><input type="radio" name="q1" value="a">พิกัด E เพิ่ม 13 เมตรทันที</label><label><input type="radio" name="q1" value="b">พิกัดทุกแกนเท่าพิกัดตั้งต้น</label><label><input type="radio" name="q1" value="c">พิกัดทุกแกนเท่ากับศูนย์</label></fieldset></div>
+ <div class="qa"><fieldset><legend>Q2: σE ที่เพิ่มขึ้นในการทดลองนี้อธิบายจากอะไร?</legend><label><input type="radio" name="q2" value="a">การสะสม uncertainty ของ velocity เมื่อเวลาห่างจาก t₀</label><label><input type="radio" name="q2" value="b">แปลงพิกัดจาก ITRF2014 ไป ITRF2020 สำเร็จแล้ว</label><label><input type="radio" name="q2" value="c">จากค่า E/N/U ไม่สามารถประเมิน σE ได้ทุกกรณี</label></fieldset></div>
+ <div class="qa"><fieldset><legend>Q3: การแพร่ Local ENU แบบนี้เท่ากับการแปลง ITRF2014 → ITRF2020 หรือไม่?</legend><label><input type="radio" name="q3" value="a">เท่ากัน เพราะใช้ epoch เหมือนกัน</label><label><input type="radio" name="q3" value="b">ไม่เท่ากัน เพราะยังไม่มีข้อมูลผูกและแปลง reference frame</label></fieldset></div>
+ <div class="inputline" style="margin-top:14px"><button id="check" type="button">ตรวจคำตอบ</button><button id="clear" type="button" class="secondary">ทำใหม่</button><div id="grade" aria-live="polite" role="status" style="font-weight:700"></div></div>
+</section>
+<section class="card" id="sources"><h2>วิทยาศาสตร์และข้อจำกัด</h2><p>แบบจำลอง: velocity คงที่, ทิศของแกน ENU คงที่, epochs เป็น decimal years, covariance ของ E₀ กับ vE เป็นศูนย์, พิจารณา uncertainty เฉพาะ East เท่านั้น</p><p>สำหรับสถานีจริง ควรตรวจ reference frame, reference/observation epoch, ผลของ non-linear station motion, covariance และ station discontinuities ก่อนใช้งานเชิง geodetic</p><ol class="sources"><li><a href="https://www.iers.org/iers/en/dataproducts/itrf/itrf" target="_blank" rel="noopener noreferrer">IERS — ITRF</a></li><li><a href="https://iers-conventions.obspm.fr/content/chapter4/icc4.pdf" target="_blank" rel="noopener noreferrer">IERS Conventions — Chapter 4</a></li><li><a href="https://itrf.ign.fr/en/solutions/itrf2020/description/more" target="_blank" rel="noopener noreferrer">ITRF2020 — Kinematic station model</a></li></ol><p class="foot">IX Learning Studio · Pilot 01 / iPad V2 · ใช้ข้อมูลสังเคราะห์เท่านั้น · แสดงผลเฉพาะภายใน browser ไม่มี analytics, CDN หรือ network calls</p></section>
+</main>
+<script>
+'use strict';
+/** Pure model shared with page/test; all E,N,U are metres, v in millimetres/year. */
+function epochModel(base, velocity, initialEpoch, targetEpoch, sigma0Mm, sigmaVelocityMmYr) {
+  const all = [...base, ...velocity, initialEpoch, targetEpoch, sigma0Mm, sigmaVelocityMmYr];
+  if (!all.every(Number.isFinite)) throw new TypeError('All inputs must be finite numbers');
+  if (sigma0Mm < 0 || sigmaVelocityMmYr < 0) throw new RangeError('Uncertainty cannot be negative');
+  const dt = targetEpoch - initialEpoch;
+  const displacement = velocity.map(v => v * dt / 1000);
+  const result = base.map((v,i) => v + displacement[i]);
+  const sigmaEastMm = Math.hypot(sigma0Mm, dt * sigmaVelocityMmYr);
+  return {dt, displacement, result, sigmaEastMm};
+}
+if (typeof module !== 'undefined') module.exports = {epochModel};
+
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const initial=[100,200,50], t0=2021.93, defaults={epoch:2026.79,ve:13,vn:-9,vu:2,s0:5,sv:1};
+let renderCount=0;
+const fmtSigned=(x,n=2)=>`${x>0?'+':x<0?'−':''}${Math.abs(x).toFixed(n)}`;
+function render(){
+ const epoch=+$('epoch').value, v=['ve','vn','vu'].map(id=>+$(id).value), s0=+$('s0').value, sv=+$('sv').value;
+ const m=epochModel(initial,v,t0,epoch,s0,sv);
+ for(const [id,val] of Object.entries({epoch:epoch.toFixed(2),ve:fmtSigned(v[0],0),vn:fmtSigned(v[1],0),vu:fmtSigned(v[2],0),s0:s0.toFixed(1),sv:sv.toFixed(1)}))$(id+'-v').textContent=val;
+ ['pe','pn','pu'].forEach((id,i)=>$(id).textContent=m.result[i].toFixed(5));
+ ['de','dn','du'].forEach((id,i)=>$(id).textContent=fmtSigned(m.displacement[i]*1000));
+ $('time-expl').textContent=m.dt===0?'เวลาเป้าหมายเท่ากับเวลาเริ่มต้น (Δt = 0 ปี)':`${m.dt>0?'ผ่านไป':'ย้อนกลับ'} ${Math.abs(m.dt).toFixed(2)} ปี จาก epoch ${t0}`;
+ $('sigma').textContent=m.sigmaEastMm.toFixed(3);
+ $('sigma-why').textContent=`√[${s0.toFixed(1)}² + (${m.dt.toFixed(2)} × ${sv.toFixed(1)})²] mm (uncorrelated, 1σ)`;
+ const dx=m.displacement[0]*1000,dy=m.displacement[1]*1000;
+ const radius=Math.max(Math.abs(dx),Math.abs(dy),25), halfspan=Math.ceil(radius/25)*25, factor=142/halfspan;
+ const X=Math.max(100,Math.min(520,310+dx*factor)),Y=Math.max(45,Math.min(325,185-dy*factor));
+ $('vector').setAttribute('x2',X.toFixed(1));$('vector').setAttribute('y2',Y.toFixed(1));$('end').setAttribute('cx',X.toFixed(1));$('end').setAttribute('cy',Y.toFixed(1));
+ $('endpoint-label').textContent=`ΔE ${fmtSigned(dx)}, ΔN ${fmtSigned(dy)} mm`;
+ $('scale').textContent=`สเกลประมาณ ±${halfspan} mm (แต่ละแกน)`;
+ const comparison=m.dt===0?'ตำแหน่งเหมือนพิกัดตั้งต้นเพราะ Δt = 0':v.every(x=>x===0)?'ความเร็วเป็นศูนย์ทุกแกน จึงไม่มี displacement':m.dt<0?'กำลังประมาณพิกัดย้อนหลัง (Δt < 0)':'เมื่อ Δt เพิ่ม การกระจัดตามความเร็วคงที่จะเพิ่มตามสัดส่วน';
+ $('prediction').textContent=comparison+' • การประเมิน σE ไม่รวม model error หรือ covariance';
+ for(const id of Object.keys(defaults)) { if(document.activeElement !== $(id+'-num')) $(id+'-num').value=$(id).value; }
+ ++renderCount;
+ const badge=$('js-status');
+ badge.className='runtime-status runtime-ready';
+ badge.textContent=`✓ JavaScript ทำงาน • อัปเดตแล้ว ${renderCount} ครั้ง • หากลาก Slider ตัวเลขและกราฟจะเปลี่ยนทันที`;
+
+}
+for(const k of Object.keys(defaults)){
+  const range=$(k), num=$(k+'-num');
+  range.addEventListener('input',render);
+  range.addEventListener('change',render); // mobile / accessibility fallback
+  num.addEventListener('input',()=>{
+    if(num.value==='' || !Number.isFinite(Number(num.value))) return;
+    const min=Number(range.min), max=Number(range.max), step=Number(range.step);
+    const val=Math.min(max,Math.max(min,Number(num.value)));
+    const rounded=Number((min+Math.round((val-min)/step)*step).toFixed(5));
+    range.value=String(rounded);
+    render();
+  });
+  num.addEventListener('change',()=>{num.value=range.value;render();});
+}
+document.querySelectorAll('[data-target][data-dir]').forEach(button=>{
+ button.addEventListener('click',()=>{
+  const id=button.dataset.target, range=$(id);
+  const min=Number(range.min),max=Number(range.max),step=Number(range.step);
+  const desired=Number(range.value)+Number(button.dataset.dir)*step;
+  range.value=String(Number(Math.min(max,Math.max(min,desired)).toFixed(5)));
+  $(id+'-num').value=range.value;
+  render();
+ });
+});
+$('reset').addEventListener('click',()=>{for(const [id,val] of Object.entries(defaults)){$(id).value=val;$(id+'-num').value=val;}render();$('epoch').focus();});
+$('check').addEventListener('click',()=>{const answers={q1:'b',q2:'a',q3:'b'},got=Object.keys(answers).map(q=>(document.querySelector(`input[name="${q}"]:checked`)||{}).value||'');const score=Object.keys(answers).filter((q,i)=>got[i]===answers[q]).length;const status=$('grade');if(got.some(x=>!x)){status.textContent='กรุณาตอบให้ครบทั้ง 3 ข้อ';status.className='bad';return;}status.textContent=`${score}/3 ${score===3?'PASS — เข้าใจหลักการพื้นฐาน':'RETRY — ลองทบทวนกลไกและข้อจำกัด'}`;status.className=score===3?'good':'bad';});
+$('clear').addEventListener('click',()=>{document.querySelectorAll('#quiz input[type=radio]').forEach(x=>x.checked=false);$('grade').textContent='';});
+render();
+})();
+</script>
+</body>
+</html>
