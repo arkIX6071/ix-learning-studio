@@ -1,0 +1,319 @@
+{
+  "lesson": "rs-l04",
+  "version": "0.2.0-publicsafe.1",
+  "language": "th",
+  "method": "curated glossary (hand-written, source-anchored); no frequency scoring",
+  "source_document": {
+    "public_context": "Original teaching reference is not distributed; public references are provided in the lesson."
+  },
+  "review_policy": "Approved original glossary SHA256 9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c (2026-10-26); edited public-safe derivative needs final owner editorial confirmation.",
+  "terms": [
+    {
+      "id": "radiometric-correction",
+      "en": "Radiometric Correction",
+      "th": "การแก้ความคลาดเคลื่อนเชิงรังสี",
+      "match_en": [
+        "radiometric correction"
+      ],
+      "match_th": [
+        "การแก้ความคลาดเคลื่อนเชิงรังสี"
+      ],
+      "beginner": "แก้ “ค่า” ของ pixel ให้มีความหมายทางฟิสิกส์ ขั้นแรกแปลงตัวเลขดิบ (DN) เป็นปริมาณแสงที่มาถึง sensor แล้วจึงแก้ผลของมุมดวงอาทิตย์และบรรยากาศ ค่าที่ได้จากขั้นแรกคือแสงที่ sensor รับได้ ยังไม่ใช่ค่าการสะท้อนของพื้นผิว การแก้แบบนี้ไม่ได้ย้ายตำแหน่งของ pixel",
+      "advanced": "กระบวนการแก้เชิงรังสีแบ่งได้เป็น (1) calibration แปลง DN เป็น at-sensor spectral radiance ด้วยค่าปรับเทียบของ sensor (L = (DN − B)/G); (2) การหาค่า TOA reflectance ซึ่งสัมพันธ์กับ geometry ของดวงอาทิตย์และพารามิเตอร์ใน metadata; (3) atmospheric correction เพื่อประเมิน surface reflectance · ขั้น (1) และ (2) ไม่ได้ตัดผลของบรรยากาศ ค่า TOA reflectance จึงยังมี path radiance · สำหรับผลิตภัณฑ์ Landsat บางชนิด ใช้ reflectance rescaling factors (M_ρ, A_ρ) กับ DN (Q_cal) ได้โดยตรง โดยต้องพิจารณาการแก้มุมดวงอาทิตย์",
+      "equation": "L = (DN − B)/G   [W m⁻² sr⁻¹ µm⁻¹] ;   ρ_TOA = (M_ρ·Q_cal + A_ρ)/cos θ_SZ   [ไม่มีหน่วย]",
+      "links": [
+        {
+          "href": "#m3",
+          "label": "ลองใน Module 3"
+        }
+      ],
+      "sources": [
+        "USGS — Using USGS Landsat Level-1 Data Product (https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product)"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "geometric-correction",
+      "en": "Geometric Correction / Rectification",
+      "th": "การแก้ความคลาดเคลื่อนเชิงเรขาคณิต",
+      "match_en": [
+        "geometric correction",
+        "geometric rectification"
+      ],
+      "match_th": [
+        "การแก้ความคลาดเคลื่อนเชิงเรขาคณิต"
+      ],
+      "beginner": "ย้ายแต่ละ pixel ไปไว้ตรงตำแหน่งจริงบนแผนที่ หลังย้ายแล้วต้องหาค่าของ pixel ในตำแหน่งใหม่ (resampling) ซึ่งอาจทำให้ค่าเปลี่ยนไปจากเดิม ภาพที่วางได้ถูกตำแหน่งจึงไม่ได้แปลว่าค่าความสว่างยังเหมือนต้นฉบับ",
+      "advanced": "มีสองส่วน (A) transformation: หาความสัมพันธ์ระหว่างพิกัดแผนที่ (X, Y) กับพิกัดภาพ (x, y) โดย systematic distortion ใช้แบบจำลองที่สอดคล้องกับ sensor ส่วนส่วนที่เหลืออาจใช้ polynomial จาก GCP ด้วย least squares (B) resampling: ประมาณค่า pixel ณ จุด output ที่หาได้จาก transformation · ความถูกต้องเชิงตำแหน่ง (spatial accuracy) ขึ้นกับส่วน A และประเมินด้วย check point อิสระ ส่วนความคงเดิมของค่า pixel (radiometric fidelity) ขึ้นกับส่วน B: NN คงค่าตัวอย่างเดิม แต่เลือกตำแหน่ง sample ที่ใกล้ที่สุด ส่วน bilinear/cubic สร้างค่าใหม่ · ความคลาดเคลื่อนจาก relief displacement ต้องพิจารณา orthorectification ร่วมกับ DEM ไม่ใช่อาศัย polynomial แบบ 2 มิติเพียงอย่างเดียว",
+      "equation": "x = a₁ + a₂X + a₃Y + u ,  y = b₁ + b₂X + b₃Y + v   [x, y: pixel ; X, Y: หน่วยแผนที่]",
+      "links": [
+        {
+          "href": "#m2",
+          "label": "ลองใน Module 2"
+        },
+        {
+          "href": "#mv",
+          "label": "ดูกลไกการกวาดภาพ (2A)"
+        },
+        {
+          "href": "#m4",
+          "label": "ผลของ resampling (Module 4)"
+        }
+      ],
+      "sources": [
+        "หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "resampling",
+      "en": "Resampling",
+      "th": "การหาค่า pixel ใหม่หลังแปลงพิกัด",
+      "match_en": [
+        "resampling",
+        "resample"
+      ],
+      "match_th": [],
+      "beginner": "หลังจัดภาพใหม่แล้ว กึ่งกลางของ pixel ใหม่มักไม่ตรงกับ pixel เดิม จึงต้องเลือกหรือประมาณค่าจาก pixel รอบข้าง",
+      "advanced": "เมื่อ transformation กำหนดตำแหน่งของ output ในระบบพิกัด input แล้ว จึงประมาณค่าจาก pixel ข้างเคียง: nearest neighbour ใช้ค่าของ pixel ใกล้ที่สุด, bilinear เฉลี่ยถ่วงน้ำหนักจาก 4 pixel และ cubic convolution ใช้ 16 pixel ตามวิธีมาตรฐาน · resampling ไม่ได้เพิ่มความถูกต้องเชิงตำแหน่งของ transformation · cubic อาจให้ผลการประมาณค่าที่เรียบกว่าในบางสถานการณ์ แต่ไม่เท่ากับความถูกต้องเชิงตำแหน่ง · bilinear และ cubic สร้างค่าใหม่ ไม่เหมาะกับข้อมูลประเภท class label ที่เป็นกลุ่มไม่ต่อเนื่อง",
+      "equation": "f(u,v) ≈ (1−a)(1−b)f₀₀ + a(1−b)f₁₀ + (1−a)b·f₀₁ + ab·f₁₁ ,  a, b ∈ [0, 1)",
+      "links": [
+        {
+          "href": "#m4",
+          "label": "ลองใน Module 4"
+        }
+      ],
+      "sources": [
+        "หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "gcp",
+      "en": "Ground Control Point (GCP)",
+      "th": "จุดควบคุมภาคพื้นดิน",
+      "match_en": [
+        "ground control points",
+        "ground control point",
+        "gcps",
+        "gcp"
+      ],
+      "match_th": [
+        "จุดควบคุมภาคพื้นดิน"
+      ],
+      "beginner": "จุดที่มองเห็นชัดทั้งในภาพและรู้พิกัดจริงบนพื้น เช่น สี่แยกหรือมุมอาคาร ใช้เป็นหมุดยึดภาพเข้ากับแผนที่",
+      "advanced": "คู่ค่าสังเกต (X, Y) ↔ (x, y) ที่ใช้ประมาณสัมประสิทธิ์ของ transformation จำนวนขั้นต่ำสำหรับ polynomial ลำดับ 1, 2 และ 3 คือ 3, 6 และ 10 จุดตามลำดับ โดยต้องกระจายพื้นที่อย่างเหมาะสม · ควรมีจำนวนเกินขั้นต่ำเพื่อให้ redundancy และไม่ควรอยู่บนเส้นตรงเดียวกัน · ประเมินความแม่นยำกับ check point อิสระที่ไม่ได้ใช้ในการ fit",
+      "equation": "จำนวนสัมประสิทธิ์ต่อแกน = (k+1)(k+2)/2  →  k = 1, 2, 3 : 3, 6, 10",
+      "links": [
+        {
+          "href": "#m2",
+          "label": "ลองใน Module 2"
+        }
+      ],
+      "sources": [
+        "ASPRS — Positional Accuracy Standards for Digital Geospatial Data, Edition 2 (2024) (https://www.asprs.org/ItemDetail?Category=PUB&WebsiteKey=e8e7bedc-f8a0-4a72-9989-95fd785baf8a&iProductCode=PAS2024)"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "check-point",
+      "en": "Check Point",
+      "th": "จุดตรวจสอบอิสระ",
+      "match_en": [
+        "check points",
+        "check point"
+      ],
+      "match_th": [],
+      "beginner": "จุดที่รู้พิกัดจริงแต่ไม่ได้นำไปใช้ปรับภาพ ใช้ตรวจว่าภาพที่แก้แล้วแม่นยำจริงหรือไม่",
+      "advanced": "Residual ที่ check point เป็นหลักฐานอิสระของความถูกต้องเชิงตำแหน่ง ต่างจาก residual ที่ GCP ซึ่งนำเข้าไปใช้ประมาณพารามิเตอร์ของแบบจำลอง · เมื่อจำนวนค่าสังเกตเท่ากับจำนวนตัวไม่ทราบค่า อาจได้ residual ของ GCP เป็นศูนย์ แต่ไม่ได้รับประกันว่า check point จะไม่มีความคลาดเคลื่อน · การรายงานความถูกต้องควรระบุจำนวน การกระจาย และนิยามสถิติ RMSE อย่างชัดเจน",
+      "equation": "RMSE_r = √( Σ(vx² + vy²) / n_CP )   [หน่วยเดียวกับพิกัด]",
+      "links": [
+        {
+          "href": "#m2",
+          "label": "ลองใน Module 2"
+        }
+      ],
+      "sources": [
+        "ASPRS — Positional Accuracy Standards for Digital Geospatial Data, Edition 2 (2024) (https://www.asprs.org/ItemDetail?Category=PUB&WebsiteKey=e8e7bedc-f8a0-4a72-9989-95fd785baf8a&iProductCode=PAS2024)"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "path-radiance",
+      "en": "Path Radiance",
+      "th": "radiance ที่เกิดจากการกระเจิงในบรรยากาศ",
+      "match_en": [
+        "path radiance"
+      ],
+      "match_th": [],
+      "beginner": "แสงที่ฝุ่นและโมเลกุลในอากาศกระเจิงเข้าสู่ sensor โดยไม่ได้มาจากพื้นผิวที่เรามอง ทำให้ภาพดูมีหมอกและ contrast ต่ำ",
+      "advanced": "พจน์ L_p ที่บวกเพิ่มใน L_tot = ρET/π + L_p เป็นผลของรังสีที่กระเจิงผ่านบรรยากาศเข้าสู่ sensor ซึ่งอาจสร้าง haze และลด contrast · dark object subtraction ใช้ค่าที่สังเกตจากบริเวณที่มี reflectance ใกล้ศูนย์ในแบนด์นั้น เช่น น้ำลึกใสใน NIR เพื่อประมาณ L_p แล้วลบพจน์บวกออก · วิธีนี้ไม่ได้แก้ transmittance T และควรพิจารณาความแตกต่างตามช่วงความยาวคลื่น",
+      "equation": "L_tot = ρ·E·T/π + L_p   [L: W m⁻² sr⁻¹ µm⁻¹ ; E: W m⁻² µm⁻¹ ; ρ, T: ไม่มีหน่วย]",
+      "links": [
+        {
+          "href": "#m3",
+          "label": "ลองใน Module 3 (ส่วน D)"
+        }
+      ],
+      "sources": [
+        "หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "least-squares",
+      "en": "Least Squares Adjustment",
+      "th": "การปรับแก้ด้วยวิธีกำลังสองน้อยที่สุด",
+      "match_en": [
+        "least squares adjustment",
+        "least squares",
+        "least-squares"
+      ],
+      "match_th": [
+        "กำลังสองน้อยที่สุด"
+      ],
+      "beginner": "เมื่อมีจุดวัดมากกว่าที่จำเป็น ให้เลือกคำตอบที่ทำให้ผลรวมกำลังสองของความคลาดเคลื่อนเล็กที่สุด",
+      "advanced": "สำหรับแบบจำลองเชิงเส้น เขียนความสัมพันธ์ค่าสังเกตและค่าปรับแก้ได้เป็น A·x = B − v; ผลเฉลยแบบถ่วงน้ำหนักคือ x̂ = (AᵀPA)⁻¹AᵀPB เมื่อ normal matrix กลับเมทริกซ์ได้ และ σ̂₀² = vᵀPv / r โดย r = n_obs − n_unknown · ในตัวอย่างนี้ P = I และ affine 2 มิติมี r = 2n − 6 เมื่อ n คือจำนวน GCP; ถ้า r = 0 จะประมาณ variance factor หลังปรับแก้จาก residual ไม่ได้",
+      "equation": "x̂ = (AᵀPA)⁻¹AᵀPB ,  v = B − A·x̂ ,  σ̂₀² = vᵀPv / r ,  r = 2n − 6",
+      "links": [
+        {
+          "href": "#m2",
+          "label": "ลองใน Module 2"
+        }
+      ],
+      "sources": [
+        "หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "dn",
+      "en": "Digital Number (DN)",
+      "th": "ค่าตัวเลขที่ sensor บันทึก",
+      "match_en": [
+        "dn"
+      ],
+      "match_th": [],
+      "beginner": "ตัวเลขจำนวนเต็มที่เก็บอยู่ในแต่ละ pixel เช่น 0–255 สำหรับภาพ 8-bit ตัวมันเองยังไม่มีหน่วยทางฟิสิกส์",
+      "advanced": "Digital Number เป็นค่าตัวเลขหลังการแปลงสัญญาณและควอนไทซ์ ภายในช่วงที่ไม่มี saturation อาจอธิบายความสัมพันธ์กับ radiance เป็น DN = G·L + B เมื่อค่าสอบเทียบตรงกับ sensor และ band ที่ใช้ · สำหรับ Landsat Level-1 ค่า DN หรือ Q_cal ใช้กับ multiplicative/additive rescaling coefficients ที่ระบุใน metadata · ค่า DN จาก sensor หรือ band ต่างกันจึงไม่ควรเปรียบเทียบเชิงฟิสิกส์โดยตรงโดยไม่ปรับเทียบ",
+      "equation": "DN = G·L + B   [DN: ไม่มีหน่วย ; G: DN ต่อ W m⁻² sr⁻¹ µm⁻¹]",
+      "links": [
+        {
+          "href": "#m1",
+          "label": "ดูใน Module 1"
+        },
+        {
+          "href": "#m3",
+          "label": "Module 3"
+        }
+      ],
+      "sources": [
+        "USGS — Using USGS Landsat Level-1 Data Product (https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product)"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    },
+    {
+      "id": "spectral-radiance",
+      "en": "Spectral Radiance",
+      "th": "ความเข้มรังสีต่อหน่วยความยาวคลื่น",
+      "match_en": [
+        "spectral radiance"
+      ],
+      "match_th": [],
+      "beginner": "ปริมาณแสงที่เดินทางมาจากทิศหนึ่งเข้าสู่ sensor คิดต่อพื้นที่ ต่อมุมตัน (ความกว้างของกรวยที่มอง) และต่อช่วงความยาวคลื่น ยังไม่ใช่ค่าการสะท้อนของพื้นผิว",
+      "advanced": "กำลังรังสีต่อพื้นที่ฉายในแนวตั้งฉากกับทิศรังสี ต่อมุมตัน และต่อช่วงความยาวคลื่น: L_λ = d³Φ/(dA·cos θ·dΩ·dλ), หน่วย W m⁻² sr⁻¹ µm⁻¹ · หน่วย mW cm⁻² sr⁻¹ µm⁻¹ ในเอกสารบางฉบับเท่ากับ 10 W m⁻² sr⁻¹ µm⁻¹ · ค่า at-sensor spectral radiance รวมผลของบรรยากาศ จึงไม่ใช่ surface reflectance ซึ่งเป็นปริมาณไม่มีหน่วย",
+      "equation": "L = L_min + DN·(L_max − L_min)/DN_max   [W m⁻² sr⁻¹ µm⁻¹]",
+      "links": [
+        {
+          "href": "#m3",
+          "label": "ลองใน Module 3"
+        }
+      ],
+      "sources": [
+        "USGS — Using USGS Landsat Level-1 Data Product (https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product)"
+      ],
+      "provenance": {
+        "from_slides": [],
+        "added": []
+      },
+      "review": {
+        "self": "REVISED_0.2.0",
+        "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION",
+        "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c",
+        "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"
+      }
+    }
+  ]
+}

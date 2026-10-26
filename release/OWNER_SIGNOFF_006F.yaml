@@ -1,0 +1,22 @@
+record_type: IXLS_OWNER_SIGNOFF
+scope: Public-safe Remote Sensing L04 v0.2.0-publicsafe.1
+recorded_on: '2026-10-26'
+source: Explicit owner approvals in the IX Learning Studio conversation
+approvals:
+  A1_public_safe: APPROVED
+  B1_nine_glossary_terms: APPROVED
+  B1_artifact: lessons/rs-l04/glossary.th.json
+  B1_sha256: 01a1e3052a8f03f31cf5796264bf548b7aec7d88d207ec506d2b63c3befde0da
+  C1_MIT_scoped_owned_code: APPROVED
+  D1_content_all_rights_reserved: APPROVED
+verification:
+  approved_glossary_file_unchanged: REQUIRED
+  embedded_glossary_equivalent: REQUIRED
+  runtime_approval_badge: METADATA_FROM_THIS_APPROVAL_NOT_FROM_OLD_REVIEW_FIELDS
+publishing:
+  production_authorization: NOT_GRANTED
+  manual_deployment: REQUIRES_SEPARATE_EXPLICIT_OWNER_APPROVAL
+notes:
+  - The glossary JSON retains its historical pending owner fields to preserve the approved exact SHA.
+  - Runtime approval display is enabled only with version-locked HTML meta and CI integrity checks.
+  - No private lecturer PDF, page map, internal errata, or RTSD data may be committed to the public repo.

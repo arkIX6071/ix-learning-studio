@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="ix-glossary-owner-approved-sha256" content="01a1e3052a8f03f31cf5796264bf548b7aec7d88d207ec506d2b63c3befde0da">
+<title>IX Learning Studio · RS L04 Digital Image Processing</title>
+<style>
+:root{--dark:#153843;--ink:#1e3340;--muted:#536c73;--bg:#f5f8f7;--teal:#176e71;--line:#d5e3e2;--soft:#eef5f4;--ref:#6f848a;--obs:#c2570c;--cor:#176e71;--bad:#b3261e;--good:#1f7a3a;--warn:#8a5a00}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+svg text{pointer-events:none;user-select:none;-webkit-user-select:none}
+body{margin:0;background:var(--bg);font:16px/1.65 system-ui,-apple-system,'Noto Sans Thai','Sukhumvit Set',Tahoma,sans-serif;color:var(--ink);-webkit-text-size-adjust:100%}
+a{color:var(--teal)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #298bca;outline-offset:2px}
+header{background:var(--dark);color:#fff;padding:22px max(16px,calc((100vw - 1060px)/2)) 30px}
+header h1{font-size:clamp(26px,4vw,40px);margin:8px 0 6px;line-height:1.25}
+header p{max-width:820px;color:#d6e5e4;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{display:inline-block;border:1px solid #9cc3c0;padding:2px 10px;border-radius:99px;font-size:12px;color:#e6f2f1}
+.tag.alert{border-color:#f2c27b;color:#ffe2b5}
+nav.toc{position:sticky;top:0;z-index:5;background:#ffffffee;backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.toc ol{display:flex;gap:6px;overflow-x:auto;margin:0 auto;padding:8px max(10px,calc((100vw - 1060px)/2));list-style:none;scrollbar-width:none}
+nav.toc a{display:inline-flex;align-items:center;gap:6px;min-height:40px;white-space:nowrap;padding:6px 12px;border:1px solid var(--line);border-radius:99px;text-decoration:none;font-size:14px;background:#fff;color:var(--ink)}
+nav.toc a .st{font-size:12px;color:var(--muted)}
+main{width:min(1060px,calc(100% - 22px));margin:20px auto 70px}
+.card{background:#fff;border:1px solid var(--line);padding:22px;border-radius:18px;margin-bottom:18px;min-width:0}
+.card h2{margin:0 0 6px;font-size:23px;line-height:1.3}
+.card h3{margin:18px 0 8px;font-size:18px}
+.lead{color:var(--muted);margin:0 0 12px}
+.cols{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.25fr);gap:16px}
+.cols>*{min-width:0}
+.src{display:inline-block;background:#e4eefc;color:#1d4f91;border:1px solid #b9cff0;border-radius:6px;padding:0 6px;font-size:12px;font-weight:600;white-space:nowrap}
+.ext{display:inline-block;background:#fbeee0;color:#7a4300;border:1px solid #efcfa6;border-radius:6px;padding:0 6px;font-size:12px;font-weight:600;white-space:nowrap}
+.ill{display:inline-block;background:#f0f0f0;color:#444;border:1px solid #d5d5d5;border-radius:6px;padding:0 6px;font-size:12px;white-space:nowrap}
+.status{font-size:14px;padding:8px 12px;border-radius:10px;background:#fff4e0;border:1px solid #f0d39a;color:#6a4500;margin:0 0 14px}
+.status.ok{background:#e8f5ec;border-color:#b7dcc2;color:var(--good)}
+.control{margin:0 0 12px}
+.control label{display:flex;justify-content:space-between;gap:10px;font-weight:650;font-size:15px}
+.control output{font-variant-numeric:tabular-nums;color:var(--teal);font-weight:700}
+.control .help{font-size:13px;color:var(--muted);margin:2px 0 0}
+input[type=range]{width:100%;height:34px;accent-color:var(--teal);margin:2px 0;touch-action:pan-y}
+.tools{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px}
+.tools button,.btn{min-height:44px;min-width:44px;border:1px solid var(--line);background:#fff;border-radius:10px;font-weight:700}
+.tools input{min-height:44px;width:100%;border:1px solid var(--line);border-radius:10px;padding:0 10px;text-align:center;font-size:16px}
+.btn{padding:8px 14px}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+.seg input{width:20px;height:20px;accent-color:var(--teal)}
+select{min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px;background:#fff;max-width:100%}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.metric{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:9px 12px;min-width:0}
+.metric span{display:block;font-size:13px;color:var(--muted)}
+.metric strong{display:block;font-size:20px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.metric.bad{background:#fbeceb;border-color:#efc1bd}
+.metric.bad strong{color:var(--bad)}
+.eq{background:#f7faf9;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:8px;padding:8px 12px;margin:8px 0;font-family:'Cambria Math','STIX Two Math','Times New Roman',serif;font-size:18px;overflow-x:auto;white-space:nowrap}
+.vars{font-size:14px;color:var(--muted);margin:4px 0 10px;padding-left:18px}
+.note{border-radius:10px;padding:10px 12px;margin:10px 0;font-size:15px;border:1px solid}
+.note.warn{background:#fff7e8;border-color:#f0d39a}
+.note.bad{background:#fbeceb;border-color:#efc1bd;color:#5c1410}
+.note.good{background:#e8f5ec;border-color:#b7dcc2}
+.note.info{background:#eef4fb;border-color:#c9daef}
+.fact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0}
+.fact{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px;background:#fff}
+.fact b{display:block;font-size:12px;letter-spacing:.06em;color:var(--muted)}
+figure{margin:0}
+svg{display:block;width:100%;height:auto;max-width:100%;background:#fbfdfc;border:1px solid var(--line);border-radius:12px;touch-action:manipulation}
+#h-svg{max-width:640px;margin:0 auto}
+#src th,#src td{text-align:left;vertical-align:top}
+#rs-eq{white-space:normal;font-size:15px}
+figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--muted);margin:6px 0}
+.legend i{display:inline-block;width:18px;height:0;border-top:3px solid;vertical-align:middle;margin-right:4px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+.tablewrap{overflow-x:auto;max-width:100%}
+.predict{border:1px dashed #9cc3c0;border-radius:12px;padding:12px;margin:12px 0;background:#fbfefd}
+.predict summary{cursor:pointer;font-weight:700;min-height:32px}
+.q{border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px;background:#fff}
+.q h3{margin:0 0 6px;font-size:17px}
+.q .lvl{font-size:12px;color:var(--muted);font-weight:600}
+.q label.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin:6px 0;min-height:44px;cursor:pointer}
+.q label.opt input{margin-top:4px;width:20px;height:20px;flex:none;accent-color:var(--teal)}
+.q textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:6px;resize:vertical}
+.q input.num{min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px;width:min(220px,100%);font-size:16px}
+.fb{margin-top:8px;border-radius:10px;padding:10px 12px;display:none}
+.fb.show{display:block}
+.fb.pass{background:#e8f5ec;border:1px solid #b7dcc2}
+.fb.retry{background:#fbeceb;border:1px solid #efc1bd}
+.badge{display:inline-block;font-weight:800;padding:1px 8px;border-radius:6px;margin-right:6px}
+.badge.pass{background:var(--good);color:#fff}
+.badge.retry{background:var(--bad);color:#fff}
+.hint{display:none;font-size:14px;color:#4a5f66;background:#f3f7f6;border-radius:8px;padding:8px 10px;margin-top:6px}
+.hint.show{display:block}
+.scen{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.scen .row>label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;min-width:min(260px,100%);flex:1}
+.small{font-size:14px;color:var(--muted)}
+.cellgrid text{pointer-events:none}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+textarea.out{width:100%;min-height:140px;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:13px}
+noscript div{margin:16px;padding:14px;border-radius:12px;background:#fbeceb;border:1px solid #efc1bd}
+@media(max-width:820px){.cols{grid-template-columns:1fr}.card{padding:16px}.eq{font-size:16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+<!--IX-CAP005:BEGIN head-->
+<meta name="ix-features" content="jargon-lens mechanism-viewer">
+<meta name="ix-jargon-exclude" content="#m5,#m6,#src,.lvl">
+<link rel="stylesheet" href="../../assets/ix-components/v0.2.0/jargon-lens.css">
+<link rel="stylesheet" href="../../assets/ix-components/v0.2.0/mechanism-viewer.css">
+<!--IX-CAP005:END head--></head>
+<body>
+<noscript><div>บทเรียนนี้ต้องใช้ JavaScript เพื่อคำนวณและวาดแผนภาพ กรุณาเปิดใน Safari หรือ Chrome ที่เปิด JavaScript</div></noscript>
+<header>
+  <div class="small" style="color:#c3ebe4">IX Learning Studio · บทเรียน Interactive เพื่อการศึกษา · ข้อมูลสังเคราะห์</div>
+  <h1>ภาพดาวเทียมผิดได้สองทาง: ตำแหน่ง และ ค่า</h1>
+  <p>L04 Digital Image Processing — ทดลองแก้ความคลาดเคลื่อนเชิงเรขาคณิตและเชิงรังสี ดูผลของการ resample และฝึกตัดสินใจจากโจทย์จริง ค่าตัวเลขของ Interactive Lab คำนวณจากแบบจำลองที่แสดง</p>
+  <div class="tags">
+    <span class="tag">2108627 Geoimage Processing · RS Session 13 (26 ต.ค. 2026)</span>
+    <span class="tag">เอกสารอ้างอิงจากรายวิชาและแหล่งเสริม ระบุที่ท้ายบทเรียน</span>
+    <span class="tag">ข้อมูลสังเคราะห์ทั้งหมด</span>
+  </div>
+</header>
+<nav class="toc" aria-label="สารบัญบทเรียน">
+  <ol>
+    <li><a href="../../" aria-label="กลับสู่ IX Learning Studio Learning Library">← กลับ Library</a></li>
+    <!--IX-CAP005:BEGIN navglossary--><li><button type="button" class="ix-jl-navbtn" data-ix-glossary-open aria-controls="ix-jl-drawer" aria-expanded="false">คำศัพท์</button></li>
+    <!--IX-CAP005:END navglossary--><li><a href="#m1">1 Pixel <span class="st" id="nav-m1"></span></a></li>
+    <!--IX-CAP005:BEGIN nav--><li><a href="#mv">2A กลไก scanner <span class="st">ใหม่</span></a></li>
+    <!--IX-CAP005:END nav--><li><a href="#m2">2 Geometric <span class="st" id="nav-m2"></span></a></li>
+    <li><a href="#m3">3 Radiometric <span class="st" id="nav-m3"></span></a></li>
+    <li><a href="#m4">4 Resampling <span class="st" id="nav-m4"></span></a></li>
+    <li><a href="#m5">5 Decision Lab <span class="st" id="nav-m5"></span></a></li>
+    <li><a href="#m6">6 Mastery Gate <span class="st" id="nav-m6"></span></a></li>
+    <li><a href="#src">แหล่งข้อมูล</a></li>
+  </ol>
+</nav>
+<main>
+<div id="js-status" class="status" role="status" aria-live="polite">JavaScript ยังไม่เริ่มทำงาน — ถ้าเปิดผ่าน Files/Quick Look ให้เปิดด้วย Safari หรือ Chrome แทน</div>
+
+<section class="card" aria-labelledby="h0">
+  <h2 id="h0">วิธีใช้หน้านี้</h2>
+  <p class="lead">ทุก module มีกล่อง <b>“ทำนายก่อน”</b> ให้คิดคำตอบก่อนขยับ slider แล้วจึงเปิดดูเฉลย Mastery Gate อยู่ใน module 6 คะแนนจะถูกเก็บไว้เฉพาะบนหน้านี้ ปิดหน้าแล้วจะหายไป</p>
+  <div class="legend"><span><span class="src">แนวคิดทั่วไป</span> = เนื้อหาจากสไลด์ผู้สอน (หน้าใน PDF 59 หน้า)</span><span><span class="ext">คำอธิบายเสริม</span> = คำอธิบายเสริมจากตำรา/เอกสารภายนอก</span><span><span class="ill">ILLUSTRATIVE</span> = ค่าสมมติเพื่อการสอน</span></div>
+</section>
+
+<!-- ================= MODULE 1 ================= -->
+<section id="m1" class="card" aria-labelledby="h1">
+  <h2 id="h1">01 / Digital Image Processing คืออะไร?</h2>
+  <p class="lead">ภาพดิจิทัลคือตารางของตัวเลข ทุก pixel ให้ข้อมูลสองชนิดที่แยกจากกัน: <b>ตำแหน่ง</b> (แถว i, คอลัมน์ j) และ <b>ค่าที่วัดได้</b> (DN) <span class="src">แนวคิดทั่วไป</span></p>
+  <div class="cols">
+    <div>
+      <figure>
+        <svg id="m1-svg" viewBox="0 0 330 330" role="img" aria-labelledby="m1-svg-t m1-svg-d"><title id="m1-svg-t">ตารางภาพสังเคราะห์ 8×8 pixel</title><desc id="m1-svg-d">แตะ pixel เพื่อดูแถว คอลัมน์ ค่า DN และพิกัดกึ่งกลาง pixel ซ้ายเป็นน้ำ (DN ต่ำ) ขวาเป็นแปลงเกษตร มีถนนสว่างในคอลัมน์ที่ 4</desc></svg>
+        <figcaption>แตะ pixel ใดก็ได้ หรือกรอกแถว/คอลัมน์ด้านขวา · pixel ขนาด 10 m <span class="ill">ILLUSTRATIVE</span></figcaption>
+      </figure>
+    </div>
+    <div>
+      <div class="row">
+        <label class="small" for="m1-row">แถว i</label><input id="m1-row" class="num" type="number" min="0" max="7" step="1" value="3" style="width:90px;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px">
+        <label class="small" for="m1-col">คอลัมน์ j</label><input id="m1-col" class="num" type="number" min="0" max="7" step="1" value="4" style="width:90px;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px">
+      </div>
+      <div class="metrics">
+        <div class="metric"><span>ตำแหน่งในภาพ (i, j)</span><strong id="m1-ij">(3, 4)</strong></div>
+        <div class="metric"><span>ค่าที่เก็บในไฟล์ DN</span><strong id="m1-dn">—</strong></div>
+        <div class="metric"><span>ความสว่างที่จอแสดง</span><strong id="m1-disp">—</strong></div>
+        <div class="metric"><span>พิกัดกึ่งกลาง pixel (X, Y) m</span><strong id="m1-xy">—</strong></div>
+      </div>
+      <div class="seg" role="group" aria-label="ตัวเลือกการแสดงผล">
+        <label><input type="checkbox" id="m1-nums" checked> แสดงตัวเลข DN</label>
+        <label><input type="checkbox" id="m1-stretch"> ยืด contrast เพื่อแสดงผล</label>
+      </div>
+      <div class="eq">X = X₀ + (j + ½)·Δ ,&nbsp; Y = Y₀ − (i + ½)·Δ</div>
+      <ul class="vars"><li>X₀ = 650 000 m, Y₀ = 1 520 000 m คือมุมบนซ้ายของภาพ, Δ = 10 m คือขนาด pixel <span class="ill">ILLUSTRATIVE</span></li><li>สมการนี้ใช้ได้เฉพาะภาพที่<b>แก้เรขาคณิตแล้ว</b> ภาพดิบยังมีความคลาดเคลื่อนตาม module 2</li></ul>
+      <div id="m1-msg" class="note info">เปิด “ยืด contrast” แล้วสังเกตว่า DN ในไฟล์เปลี่ยนหรือไม่</div>
+    </div>
+  </div>
+  <div class="fact-grid">
+    <div class="fact"><b>FACT</b>DIP นำภาพเข้าสมการหรือชุดสมการ แล้วเก็บผลลัพธ์ไว้ <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>FACT</b>งานแบ่งเป็น rectification &amp; restoration, enhancement และ classification <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>FACT</b>Rectification &amp; restoration = geometric + radiometric correction + noise removal เพื่อให้ภาพ “ตรงกับพื้นที่จริงมากขึ้น” <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>LIMITATION</b>บทเรียนฉบับนี้เน้น geometric correction, radiometric correction และ resampling; หัวข้อ noise removal, enhancement ขั้นสูงและ classification ศึกษาเพิ่มเติมแยกต่างหาก</div>
+  </div>
+  <details class="predict"><summary>ทำนายก่อน: ถ้าเปิด “ยืด contrast” แล้ว ค่า DN ในไฟล์ของ pixel (3,4) จะเปลี่ยนหรือไม่?</summary>
+    <p>ไม่เปลี่ยน การยืด contrast เพื่อแสดงผลเปลี่ยนเฉพาะ<b>ความสว่างบนจอ</b> ส่วนค่าที่วัดได้ยังเหมือนเดิม นี่คือความต่างระหว่าง <b>enhancement</b> กับ <b>correction</b>: enhancement ช่วยให้ตาอ่านภาพง่ายขึ้น ส่วน correction ทำให้ค่าสื่อถึงพื้นที่จริงมากขึ้น <span class="ext">นอกสไลด์ (Lillesand–Kiefer)</span> ถ้านำค่าที่ยืดแล้วไปบันทึกทับ แล้วใช้คำนวณต่อ ปัญหาจะเกิดทันที ดู module 3</p>
+  </details>
+</section>
+
+<!--IX-CAP005:BEGIN mechanism-->
+<section id="mv" class="card" aria-labelledby="hmv">
+  <h2 id="hmv">02A / Mechanism Viewer — scanner แบบกวาดสร้างภาพอย่างไร <span class="ill">Interactive Model v0.2.0</span></h2>
+  <p class="lead">Scanner แบบ cross-track (whiskbroom) ใช้กระจกกวาดมุม θ ในทิศตั้งฉากกับทิศการบินทีละ scan line ขณะที่ดาวเทียมเคลื่อนไปข้างหน้า และโลกหมุนไปทางตะวันออกอยู่ใต้ดาวเทียม ภาพดิบที่นำมาวางบนกริดสม่ำเสมอจึงมีความคลาดเคลื่อนแบบ systematic สองอย่าง คือ <b>skew</b> และ <b>panoramic / S-bend</b> <span class="src">แนวคิดทั่วไป</span></p>
+  <div data-ix-mechanism="whiskbroom-scan" data-ix-no-jargon><div class="ix-mv ix-mv-fallback"><p class="small">ภาพนิ่งที่ค่าเริ่มต้น — แสดงเมื่อ JavaScript ไม่ทำงาน (เมื่อ JavaScript ทำงาน ส่วนนี้จะถูกแทนด้วยแบบจำลองที่ปรับค่าได้)</p><div class="ix-mv-views"><figure><p class="ix-mv-read" data-r="iso" aria-live="polite"><b>θ = 1.25° · x = H·tan θ = 15.4 km</b> · scan line 7/12<br><span>แกนตั้งย่อส่วน: H จริง 705 km ≈ 7.6 เท่าของครึ่ง swath</span></p><svg class="ix-mv-iso" viewBox="0 0 560 360" role="img" aria-labelledby="mvqby2c-t1"><title id="mvqby2c-t1">ภาพมุมเฉียงของ scanner กวาดเป็นแนวตั้งฉากกับทิศการบิน</title><defs><marker id="mvqby2c-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1e3340"></path></marker></defs><polyline class="mv-grid" points="209.1,117.5 27.2,222.5"></polyline><polyline class="mv-grid" points="254.5,143.8 72.7,248.8"></polyline><polyline class="mv-grid" points="300.0,170.0 118.1,275.0"></polyline><polyline class="mv-grid" points="345.5,196.3 163.6,301.3"></polyline><polyline class="mv-grid" points="390.9,222.5 209.1,327.5"></polyline><polyline class="mv-grid" points="209.1,117.5 390.9,222.5"></polyline><polyline class="mv-grid" points="163.6,143.8 345.5,248.8"></polyline><polyline class="mv-grid" points="118.1,170.0 300.0,275.0"></polyline><polyline class="mv-grid" points="72.7,196.3 254.5,301.3"></polyline><polyline class="mv-grid" points="27.2,222.5 209.1,327.5"></polyline><polygon class="mv-ground" points="209.1,117.5 390.9,222.5 209.1,327.5 27.2,222.5"></polygon><polyline class="mv-track" points="300.0,170.0 194.7,224.7"></polyline><polyline class="mv-scan" points="209.1,117.5 216.7,121.9 224.4,126.3 232.0,130.7 239.6,135.1 247.2,139.5 254.7,143.9 262.3,148.2 269.8,152.6 277.4,156.9 284.9,161.3 292.5,165.6 300.0,170.0 307.5,174.4 315.1,178.7 322.6,183.1 330.2,187.4 337.7,191.8 345.3,196.1 352.8,200.5 360.4,204.9 368.0,209.3 375.6,213.7 383.3,218.1 390.9,222.5"></polyline><polyline class="mv-scan" points="193.1,125.8 200.8,130.2 208.4,134.6 216.0,139.0 223.6,143.4 231.2,147.8 238.8,152.2 246.3,156.5 253.9,160.9 261.4,165.2 269.0,169.6 276.5,173.9 284.0,178.3 291.6,182.6 299.1,187.0 306.7,191.3 314.2,195.7 321.8,200.1 329.3,204.4 336.9,208.8 344.5,213.2 352.1,217.6 359.7,222.0 367.3,226.4 375.0,230.8"></polyline><polyline class="mv-scan" points="177.2,134.1 184.8,138.5 192.5,142.9 200.1,147.3 207.7,151.7 215.3,156.1 222.8,160.4 230.4,164.8 237.9,169.2 245.5,173.5 253.0,177.9 260.6,182.2 268.1,186.6 275.6,190.9 283.2,195.3 290.7,199.6 298.3,204.0 305.8,208.4 313.4,212.7 320.9,217.1 328.5,221.5 336.1,225.9 343.7,230.3 351.4,234.7 359.0,239.1"></polyline><polyline class="mv-scan" points="161.2,142.4 168.9,146.8 176.5,151.2 184.1,155.6 191.7,160.0 199.3,164.4 206.9,168.7 214.4,173.1 222.0,177.5 229.5,181.8 237.1,186.2 244.6,190.5 252.1,194.9 259.7,199.2 267.2,203.6 274.8,207.9 282.3,212.3 289.9,216.6 297.4,221.0 305.0,225.4 312.6,229.8 320.2,234.1 327.8,238.5 335.4,242.9 343.1,247.4"></polyline><polyline class="mv-scan" points="145.3,150.7 152.9,155.1 160.5,159.5 168.2,163.9 175.8,168.3 183.3,172.6 190.9,177.0 198.5,181.4 206.0,185.7 213.6,190.1 221.1,194.5 228.7,198.8 236.2,203.2 243.7,207.5 251.3,211.9 258.8,216.2 266.3,220.6 273.9,224.9 281.5,229.3 289.0,233.7 296.6,238.0 304.2,242.4 311.8,246.8 319.5,251.2 327.1,255.7"></polyline><polyline class="mv-scan" points="129.3,158.9 137.0,163.4 144.6,167.8 152.2,172.2 159.8,176.6 167.4,180.9 175.0,185.3 182.5,189.7 190.1,194.0 197.6,198.4 205.2,202.7 212.7,207.1 220.2,211.4 227.8,215.8 235.3,220.1 242.8,224.5 250.4,228.9 257.9,233.2 265.5,237.6 273.1,242.0 280.7,246.3 288.3,250.7 295.9,255.1 303.5,259.5 311.2,263.9"></polyline><polyline class="mv-scan cur" points="113.4,167.2 121.0,171.7 128.6,176.1 136.3,180.5 143.9,184.8 151.4,189.2 159.0,193.6 166.6,198.0 174.1,202.3 181.7,206.7 189.2,211.0 196.8,215.4 204.3,219.7 211.8,224.1 219.4,228.4"></polyline><polygon class="mv-fp" points="219.4,223.2 228.5,228.4 219.4,233.7 210.3,228.4"></polygon><polyline class="mv-los" points="194.7,83.0 219.4,228.4"></polyline><polyline class="mv-drop" points="194.7,83.0 194.7,224.7"></polyline><g class="mv-sat"><rect x="185.7" y="76.0" width="18" height="14" rx="2"></rect><rect class="pan" x="154.7" y="79.0" width="26" height="8"></rect><rect class="pan" x="208.7" y="79.0" width="26" height="8"></rect></g><polyline class="mv-arrow" marker-end="url(#mvqby2c-ah)" points="395.5,246.1 331.8,282.9"></polyline><text style="font-size:13.0px" x="337.8" y="286.9">ทิศการบิน</text><polyline class="mv-arrow" marker-end="url(#mvqby2c-ah)" points="9.0,233.0 63.6,264.5"></polyline><text style="font-size:13.0px" x="51.6" y="282.5">ตะวันออก (โลกหมุน)</text></svg><figcaption>มุมเฉียง (isometric): ดาวเทียม เส้นสายตา และ scan line บนพื้น · <b>แกนตั้งย่อส่วน</b> และ footprint ขยายให้มองเห็น (อัตราส่วน sec²θ : sec θ ถูกต้อง)</figcaption></figure><figure><p class="ix-mv-read" data-r="top">กรอบเส้นประ = พื้นที่ 185.6 × 185.6 km · ทิศการบินชี้ขึ้นด้านบน</p><svg class="ix-mv-top" viewBox="0 0 560 300" role="img" aria-labelledby="mvqby2c-t2"><title id="mvqby2c-t2">มุมมองจากด้านบน: ตำแหน่งจริงของ sample บนพื้นเทียบกับตำแหน่งในภาพดิบ</title><rect class="mv-frame" x="156.9" y="31.8" width="246.2" height="246.2"></rect><polygon class="mv-out-raw" points="156.9,278.0 403.1,278.0 403.1,52.4 156.9,52.4"></polygon><polygon class="mv-out-gnd" points="156.9,278.0 403.1,278.0 391.2,52.4 145.1,52.4"></polygon><rect class="mv-raw" x="153.9" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="156.9" cy="278.0" r="3"></circle><rect class="mv-raw" x="174.4" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="177.6" cy="278.0" r="3"></circle><rect class="mv-raw" x="194.9" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="198.2" cy="278.0" r="3"></circle><rect class="mv-raw" x="215.5" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="218.7" cy="278.0" r="3"></circle><rect class="mv-raw" x="236.0" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="239.2" cy="278.0" r="3"></circle><rect class="mv-raw" x="256.5" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="259.6" cy="278.0" r="3"></circle><rect class="mv-raw" x="277.0" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="280.0" cy="278.0" r="3"></circle><rect class="mv-raw" x="297.5" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="300.4" cy="278.0" r="3"></circle><rect class="mv-raw" x="318.0" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="320.8" cy="278.0" r="3"></circle><rect class="mv-raw" x="338.5" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="341.3" cy="278.0" r="3"></circle><rect class="mv-raw" x="359.1" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="361.8" cy="278.0" r="3"></circle><rect class="mv-raw" x="379.6" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="382.4" cy="278.0" r="3"></circle><rect class="mv-raw" x="400.1" y="275.0" width="6" height="6"></rect><circle class="mv-gnd" cx="403.1" cy="278.0" r="3"></circle><polyline class="mv-gline" points="156.9,278.0 177.6,278.0 198.2,278.0 218.7,278.0 239.2,278.0 259.6,278.0 280.0,278.0 300.4,278.0 320.8,278.0 341.3,278.0 361.8,278.0 382.4,278.0 403.1,278.0"></polyline><line class="mv-err" x1="156.9" y1="216.5" x2="153.7" y2="216.5"></line><rect class="mv-raw" x="153.9" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="153.7" cy="216.5" r="3"></circle><line class="mv-err" x1="177.4" y1="216.5" x2="174.4" y2="216.5"></line><rect class="mv-raw" x="174.4" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="174.4" cy="216.5" r="3"></circle><line class="mv-err" x1="197.9" y1="216.5" x2="195.0" y2="216.5"></line><rect class="mv-raw" x="194.9" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="195.0" cy="216.5" r="3"></circle><line class="mv-err" x1="218.5" y1="216.5" x2="215.5" y2="216.5"></line><rect class="mv-raw" x="215.5" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="215.5" cy="216.5" r="3"></circle><line class="mv-err" x1="239.0" y1="216.5" x2="235.9" y2="216.5"></line><rect class="mv-raw" x="236.0" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="235.9" cy="216.5" r="3"></circle><line class="mv-err" x1="259.5" y1="216.5" x2="256.4" y2="216.5"></line><rect class="mv-raw" x="256.5" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="256.4" cy="216.5" r="3"></circle><line class="mv-err" x1="280.0" y1="216.5" x2="276.8" y2="216.5"></line><rect class="mv-raw" x="277.0" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="276.8" cy="216.5" r="3"></circle><line class="mv-err" x1="300.5" y1="216.5" x2="297.2" y2="216.5"></line><rect class="mv-raw" x="297.5" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="297.2" cy="216.5" r="3"></circle><line class="mv-err" x1="321.0" y1="216.5" x2="317.6" y2="216.5"></line><rect class="mv-raw" x="318.0" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="317.6" cy="216.5" r="3"></circle><line class="mv-err" x1="341.5" y1="216.5" x2="338.0" y2="216.5"></line><rect class="mv-raw" x="338.5" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="338.0" cy="216.5" r="3"></circle><line class="mv-err" x1="362.1" y1="216.5" x2="358.6" y2="216.5"></line><rect class="mv-raw" x="359.1" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="358.6" cy="216.5" r="3"></circle><line class="mv-err" x1="382.6" y1="216.5" x2="379.1" y2="216.5"></line><rect class="mv-raw" x="379.6" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="379.1" cy="216.5" r="3"></circle><line class="mv-err" x1="403.1" y1="216.5" x2="399.8" y2="216.5"></line><rect class="mv-raw" x="400.1" y="213.5" width="6" height="6"></rect><circle class="mv-gnd" cx="399.8" cy="216.5" r="3"></circle><polyline class="mv-gline" points="153.7,216.5 174.4,216.5 195.0,216.5 215.5,216.5 235.9,216.5 256.4,216.5 276.8,216.5 297.2,216.5 317.6,216.5 338.0,216.5 358.6,216.5 379.1,216.5 399.8,216.5"></polyline><line class="mv-err" x1="156.9" y1="154.9" x2="150.4" y2="154.9"></line><rect class="mv-raw" x="153.9" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="150.4" cy="154.9" r="3"></circle><line class="mv-err" x1="177.4" y1="154.9" x2="171.1" y2="154.9"></line><rect class="mv-raw" x="174.4" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="171.1" cy="154.9" r="3"></circle><line class="mv-err" x1="197.9" y1="154.9" x2="191.7" y2="154.9"></line><rect class="mv-raw" x="194.9" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="191.7" cy="154.9" r="3"></circle><line class="mv-err" x1="218.5" y1="154.9" x2="212.3" y2="154.9"></line><rect class="mv-raw" x="215.5" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="212.3" cy="154.9" r="3"></circle><line class="mv-err" x1="239.0" y1="154.9" x2="232.7" y2="154.9"></line><rect class="mv-raw" x="236.0" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="232.7" cy="154.9" r="3"></circle><line class="mv-err" x1="259.5" y1="154.9" x2="253.1" y2="154.9"></line><rect class="mv-raw" x="256.5" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="253.1" cy="154.9" r="3"></circle><line class="mv-err" x1="280.0" y1="154.9" x2="273.5" y2="154.9"></line><rect class="mv-raw" x="277.0" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="273.5" cy="154.9" r="3"></circle><line class="mv-err" x1="300.5" y1="154.9" x2="293.9" y2="154.9"></line><rect class="mv-raw" x="297.5" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="293.9" cy="154.9" r="3"></circle><line class="mv-err" x1="321.0" y1="154.9" x2="314.3" y2="154.9"></line><rect class="mv-raw" x="318.0" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="314.3" cy="154.9" r="3"></circle><line class="mv-err" x1="341.5" y1="154.9" x2="334.8" y2="154.9"></line><rect class="mv-raw" x="338.5" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="334.8" cy="154.9" r="3"></circle><line class="mv-err" x1="362.1" y1="154.9" x2="355.3" y2="154.9"></line><rect class="mv-raw" x="359.1" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="355.3" cy="154.9" r="3"></circle><line class="mv-err" x1="382.6" y1="154.9" x2="375.9" y2="154.9"></line><rect class="mv-raw" x="379.6" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="375.9" cy="154.9" r="3"></circle><line class="mv-err" x1="403.1" y1="154.9" x2="396.6" y2="154.9"></line><rect class="mv-raw" x="400.1" y="151.9" width="6" height="6"></rect><circle class="mv-gnd" cx="396.6" cy="154.9" r="3"></circle><polyline class="mv-gline" points="150.4,154.9 171.1,154.9 191.7,154.9 212.3,154.9 232.7,154.9 253.1,154.9 273.5,154.9 293.9,154.9 314.3,154.9 334.8,154.9 355.3,154.9 375.9,154.9 396.6,154.9"></polyline><line class="mv-err" x1="156.9" y1="93.4" x2="147.2" y2="93.4"></line><rect class="mv-raw" x="153.9" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="147.2" cy="93.4" r="3"></circle><line class="mv-err" x1="177.4" y1="93.4" x2="167.9" y2="93.4"></line><rect class="mv-raw" x="174.4" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="167.9" cy="93.4" r="3"></circle><line class="mv-err" x1="197.9" y1="93.4" x2="188.5" y2="93.4"></line><rect class="mv-raw" x="194.9" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="188.5" cy="93.4" r="3"></circle><line class="mv-err" x1="218.5" y1="93.4" x2="209.0" y2="93.4"></line><rect class="mv-raw" x="215.5" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="209.0" cy="93.4" r="3"></circle><line class="mv-err" x1="239.0" y1="93.4" x2="229.5" y2="93.4"></line><rect class="mv-raw" x="236.0" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="229.5" cy="93.4" r="3"></circle><line class="mv-err" x1="259.5" y1="93.4" x2="249.9" y2="93.4"></line><rect class="mv-raw" x="256.5" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="249.9" cy="93.4" r="3"></circle><line class="mv-err" x1="280.0" y1="93.4" x2="270.3" y2="93.4"></line><rect class="mv-raw" x="277.0" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="270.3" cy="93.4" r="3"></circle><line class="mv-err" x1="300.5" y1="93.4" x2="290.7" y2="93.4"></line><rect class="mv-raw" x="297.5" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="290.7" cy="93.4" r="3"></circle><line class="mv-err" x1="321.0" y1="93.4" x2="311.1" y2="93.4"></line><rect class="mv-raw" x="318.0" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="311.1" cy="93.4" r="3"></circle><line class="mv-err" x1="341.5" y1="93.4" x2="331.6" y2="93.4"></line><rect class="mv-raw" x="338.5" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="331.6" cy="93.4" r="3"></circle><line class="mv-err" x1="362.1" y1="93.4" x2="352.1" y2="93.4"></line><rect class="mv-raw" x="359.1" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="352.1" cy="93.4" r="3"></circle><line class="mv-err" x1="382.6" y1="93.4" x2="372.7" y2="93.4"></line><rect class="mv-raw" x="379.6" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="372.7" cy="93.4" r="3"></circle><line class="mv-err" x1="403.1" y1="93.4" x2="393.4" y2="93.4"></line><rect class="mv-raw" x="400.1" y="90.4" width="6" height="6"></rect><circle class="mv-gnd" cx="393.4" cy="93.4" r="3"></circle><polyline class="mv-gline" points="147.2,93.4 167.9,93.4 188.5,93.4 209.0,93.4 229.5,93.4 249.9,93.4 270.3,93.4 290.7,93.4 311.1,93.4 331.6,93.4 352.1,93.4 372.7,93.4 393.4,93.4"></polyline><line class="mv-err" x1="156.9" y1="52.4" x2="145.1" y2="52.4"></line><rect class="mv-raw" x="153.9" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="145.1" cy="52.4" r="3"></circle><line class="mv-err" x1="177.4" y1="52.4" x2="165.7" y2="52.4"></line><rect class="mv-raw" x="174.4" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="165.7" cy="52.4" r="3"></circle><line class="mv-err" x1="197.9" y1="52.4" x2="186.3" y2="52.4"></line><rect class="mv-raw" x="194.9" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="186.3" cy="52.4" r="3"></circle><line class="mv-err" x1="218.5" y1="52.4" x2="206.9" y2="52.4"></line><rect class="mv-raw" x="215.5" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="206.9" cy="52.4" r="3"></circle><line class="mv-err" x1="239.0" y1="52.4" x2="227.3" y2="52.4"></line><rect class="mv-raw" x="236.0" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="227.3" cy="52.4" r="3"></circle><line class="mv-err" x1="259.5" y1="52.4" x2="247.7" y2="52.4"></line><rect class="mv-raw" x="256.5" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="247.7" cy="52.4" r="3"></circle><line class="mv-err" x1="280.0" y1="52.4" x2="268.1" y2="52.4"></line><rect class="mv-raw" x="277.0" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="268.1" cy="52.4" r="3"></circle><line class="mv-err" x1="300.5" y1="52.4" x2="288.5" y2="52.4"></line><rect class="mv-raw" x="297.5" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="288.5" cy="52.4" r="3"></circle><line class="mv-err" x1="321.0" y1="52.4" x2="308.9" y2="52.4"></line><rect class="mv-raw" x="318.0" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="308.9" cy="52.4" r="3"></circle><line class="mv-err" x1="341.5" y1="52.4" x2="329.4" y2="52.4"></line><rect class="mv-raw" x="338.5" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="329.4" cy="52.4" r="3"></circle><line class="mv-err" x1="362.1" y1="52.4" x2="349.9" y2="52.4"></line><rect class="mv-raw" x="359.1" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="349.9" cy="52.4" r="3"></circle><line class="mv-err" x1="382.6" y1="52.4" x2="370.5" y2="52.4"></line><rect class="mv-raw" x="379.6" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="370.5" cy="52.4" r="3"></circle><line class="mv-err" x1="403.1" y1="52.4" x2="391.2" y2="52.4"></line><rect class="mv-raw" x="400.1" y="49.4" width="6" height="6"></rect><circle class="mv-gnd" cx="391.2" cy="52.4" r="3"></circle><polyline class="mv-gline" points="145.1,52.4 165.7,52.4 186.3,52.4 206.9,52.4 227.3,52.4 247.7,52.4 268.1,52.4 288.5,52.4 308.9,52.4 329.4,52.4 349.9,52.4 370.5,52.4 391.2,52.4"></polyline></svg><figcaption>มุมบน: ● และกรอบเขียวอมฟ้า = ตำแหน่งจริงบนพื้น · ▪ และกรอบส้ม = ตำแหน่งที่ภาพดิบสมมติ (กริดสม่ำเสมอ) · ถ้ากรอบสองสีไม่ทับกัน แปลว่ายังมีความคลาดเคลื่อน</figcaption></figure></div><div class="ix-mv-metrics"><div class="metric"><span>Swath L = 2H·tan θmax</span><strong>185.63 km</strong></div><div class="metric"><span>เวลาถ่ายทั้ง scene t_s = L/v_g</span><strong>27.48 s</strong></div><div class="metric"><span>ความเร็วผิวโลก v_e</span><strong>355.3 m/s</strong></div><div class="metric"><span>Skew ท้าย scene = v_e·t_s</span><strong>9.77 km (5.26% ของ swath)</strong></div><div class="metric"><span>ขนาด pixel ที่ขอบ (cross-track) sec²θmax</span><strong>×1.0173</strong></div><div class="metric"><span>ขนาด pixel ที่ขอบ (along-track) sec θmax</span><strong>×1.0086</strong></div><div class="metric bad"><span>ความคลาดเคลื่อนสูงสุด ภาพดิบ − พื้นจริง</span><strong>9.151 km</strong></div></div></div></div>
+  <div class="fact-grid">
+    <div class="fact"><b>MODEL</b>x = H·tan θ − v<sub>e</sub>·t , y = v<sub>g</sub>·t , v<sub>e</sub> = ω<sub>e</sub>R<sub>e</sub>cos λ , t<sub>s</sub> = L/v<sub>g</sub> <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>MODEL</b>ขนาด pixel บนพื้นโตตาม sec²θ (cross-track) และ sec θ (along-track) เมื่อกวาดด้วยมุมที่เพิ่มขึ้นทีละเท่าๆ กัน <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>ASSUMPTION</b>โลกแบน (ไม่คิดความโค้งโลก) · attitude ความสูง และความเร็วคงที่ (ไม่รวมผล attitude ที่เปลี่ยน) · 1 detector ต่อการกวาด 1 ครั้ง · กวาดทิศเดียว · วงโคจรขนานเส้นเมริเดียน (แบบจำลองนี้ยังไม่รวม inclination)</div>
+    <div class="fact"><b>LIMITATION</b>แกนตั้งในภาพมุมเฉียงย่อส่วน · footprint ขยายให้มองเห็น · ค่าเริ่มต้นใกล้เคียง Landsat TM เป็นค่าสมมติ <span class="ill">ILLUSTRATIVE</span></div>
+  </div>
+  <details class="predict"><summary>ทำนายก่อน: ถ้าเพิ่มละติจูดจาก 40° เป็น 70° แล้ว skew ท้าย scene จะเพิ่มขึ้นหรือลดลง?</summary>
+    <p>ลดลง เพราะความเร็วของผิวโลก v<sub>e</sub> = ω<sub>e</sub>R<sub>e</sub>cos λ แปรตาม cos λ: ที่ 40° ได้ ≈ 355 m/s และที่ 70° ได้ ≈ 159 m/s ส่วนเวลาถ่าย scene เท่าเดิม skew จึงลดลงประมาณ 55%</p></details>
+  <details class="predict"><summary>ทำนายก่อน: เปิด “แก้ skew” อย่างเดียว ความคลาดเคลื่อนสูงสุดจะเป็นศูนย์หรือไม่?</summary>
+    <p>ไม่เป็นศูนย์ จนกว่าจะเปิด “แก้ panoramic” ด้วย เพราะภาพดิบวาง sample ห่างเท่ากันทุกคอลัมน์ แต่บนพื้นจริงตำแหน่งเป็นไปตาม H·tan θ เมื่อแก้ครบทั้งสองอย่างภายใต้แบบจำลองนี้ ความคลาดเคลื่อนจะเป็นศูนย์ ส่วนภาพจริงยังเหลือผลที่แบบจำลองนี้ไม่ได้คิด เช่น ความโค้งของโลก attitude และ relief ซึ่งต้องแก้ด้วย GCP (Module 2)</p></details>
+</section>
+<!--IX-CAP005:END mechanism-->
+
+<!-- ================= MODULE 2 ================= -->
+<section id="m2" class="card" aria-labelledby="h2">
+  <h2 id="h2">02 / Geometric Correction — ทำให้ pixel อยู่ถูกที่</h2>
+  <p class="lead">ความคลาดเคลื่อนแบบ <b>systematic</b> (การหมุนของโลก, scan geometry, ความโค้งของโลก) แก้ได้ด้วยแบบจำลองที่รู้ล่วงหน้า ส่วนที่เหลือเป็นแบบ <b>random</b> ต้องแก้ด้วย GCP และ polynomial แล้วตรวจด้วย check point <span class="src">แนวคิดทั่วไป</span></p>
+  <div class="cols">
+    <div>
+      <h3>ความคลาดเคลื่อนของภาพดิบ (จริง แต่ผู้ประมวลผลไม่รู้)</h3>
+      <div data-ctrl="g-dx"></div>
+      <div data-ctrl="g-dy"></div>
+      <div data-ctrl="g-rot"></div>
+      <div data-ctrl="g-scale"></div>
+      <div data-ctrl="g-sigma"></div>
+      <h3>การแก้ด้วย GCP</h3>
+      <div data-ctrl="g-n"></div>
+      <div class="seg" role="radiogroup" aria-label="การกระจายตัวของ GCP">
+        <label><input type="radio" name="g-dist" value="good" checked> GCP กระจายทั่วภาพ</label>
+        <label><input type="radio" name="g-dist" value="cluster"> GCP กระจุกมุมเดียว</label>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="มุมมอง" style="margin-top:8px">
+        <label><input type="radio" name="g-view" value="raw" checked> ภาพดิบเทียบแผนที่</label>
+        <label><input type="radio" name="g-view" value="cor"> หลังแก้ (corrected)</label>
+      </div>
+      <div class="row" style="margin-top:10px"><button class="btn" type="button" id="g-reset">↶ Reset</button></div>
+    </div>
+    <div>
+      <figure>
+        <svg id="g-svg" viewBox="-12 -12 124 124" role="img" aria-labelledby="g-svg-t g-svg-d"><title id="g-svg-t">แผนที่อ้างอิงเทียบกับภาพ</title><desc id="g-svg-d">เส้นประสีเทาคือถนนและกริดในแผนที่ เส้นสีส้มคือภาพดิบ เส้นสีเขียวอมฟ้าคือภาพหลังแก้ วงกลมคือ GCP สี่เหลี่ยมคือ check point เส้นสั้นสีแดงคือเวกเตอร์ residual ที่ขยาย 10 เท่า</desc></svg>
+        <div class="legend"><span><i style="border-color:var(--ref);border-top-style:dashed"></i>แผนที่ (reference)</span><span><i style="border-color:var(--obs)"></i>ภาพดิบ (observed)</span><span><i style="border-color:var(--cor)"></i>หลังแก้</span><span>● GCP &nbsp;■ check point &nbsp;<b style="color:var(--bad)">—</b> residual ×10</span></div>
+        <figcaption>ระบบพิกัดสังเคราะห์: แกน x ไปทางขวา, y ลง · ภาพและแผนที่ใช้หน่วยเดียวกัน (1 หน่วย = 1 pixel = 1 m) <span class="ill">ILLUSTRATIVE</span></figcaption>
+      </figure>
+      <div id="g-msg" class="note info" aria-live="polite"></div>
+      <div class="metrics">
+        <div class="metric"><span>GCP / check point</span><strong id="g-counts">—</strong></div>
+        <div class="metric"><span>Redundancy r = 2n − 6</span><strong id="g-r">—</strong></div>
+        <div class="metric"><span>RMSE ที่ GCP (fit)</span><strong id="g-rmse-fit">—</strong></div>
+        <div class="metric" id="g-cp-box"><span>RMSE ที่ check point (อิสระ)</span><strong id="g-rmse-cp">—</strong></div>
+      </div>
+    </div>
+  </div>
+  <h3>สมการ polynomial ลำดับที่ 1 (map → image) <span class="src">แนวคิดทั่วไป</span></h3>
+  <div class="eq">x = a₁ + a₂X + a₃Y + u ,&nbsp;&nbsp; y = b₁ + b₂X + b₃Y + v ,&nbsp;&nbsp; <b>A·x̂ = B − v</b></div>
+  <ul class="vars"><li>(X, Y) = พิกัดแผนที่ของ GCP, (x, y) = ตำแหน่งที่ชี้ได้ในภาพ, u, v = residual</li><li>หาค่าสัมประสิทธิ์ด้วย least squares แยกสำหรับ x และ y: x̂ = (AᵀA)⁻¹AᵀB ต้องมี GCP ที่ไม่อยู่บนเส้นตรงเดียวกันอย่างน้อย 3 จุด <span class="src">แนวคิดทั่วไป</span></li></ul>
+  <div class="metrics" id="g-coef"></div>
+  <div class="cols">
+    <div>
+      <h3>จุดทดสอบ: การแปลงที่แท้จริง (ไม่มี noise)</h3>
+      <div class="row"><label class="small" for="g-tx">X</label><input id="g-tx" type="number" step="1" value="20" style="width:90px;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px"><label class="small" for="g-ty">Y</label><input id="g-ty" type="number" step="1" value="30" style="width:90px;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px"></div>
+      <div class="eq">x = c + s[(X−c)cosθ − (Y−c)sinθ] + Δx<br>y = c + s[(X−c)sinθ + (Y−c)cosθ] + Δy ,&nbsp; c = 50</div>
+      <div class="metrics"><div class="metric"><span>ตำแหน่งในภาพดิบ (x, y)</span><strong id="g-tout">—</strong></div></div>
+    </div>
+    <div>
+      <h3>Residual รายจุด (v = ค่าสังเกต − ค่าคำนวณ)</h3>
+      <div class="tablewrap"><table aria-label="ตาราง residual"><thead><tr><th>จุด</th><th>บทบาท</th><th>v<sub>x</sub></th><th>v<sub>y</sub></th><th>|v|</th></tr></thead><tbody id="g-table"></tbody></table></div>
+    </div>
+  </div>
+  <details class="predict"><summary>ทำนายก่อน: ตั้ง GCP = 3 จุด แล้ว RMSE ที่ GCP จะมีค่าเท่าไร? ภาพจะแม่นยำ 100% หรือไม่?</summary>
+    <p>RMSE ที่ GCP = 0 เสมอ เพราะสมการ 6 สมการมีตัวไม่ทราบค่า 6 ตัวพอดี (r = 0) ระนาบจึงลากผ่านทุกจุดได้โดยอัตโนมัติ <b>ค่า 0 นี้มาจากเลขคณิต ไม่ได้มาจากความแม่นยำ</b> ให้ดู RMSE ที่ check point ซึ่งไม่ได้ใช้ในการ fit เป็นหลักฐานอิสระ ส่วน noise ของการชี้ GCP จะเข้าไปปนในค่าสัมประสิทธิ์โดยไม่มีใครเห็น เปรียบกับงานรังวัด: วงรอบที่ไม่มีค่าสังเกตเกินจะ “ปิดสนิท” เสมอ แต่ไม่ได้แปลว่าวัดถูก</p>
+  </details>
+  <details class="predict"><summary>ทำนายก่อน: เปลี่ยนเป็น “GCP กระจุกมุมเดียว” แล้ว RMSE ที่ GCP กับ RMSE ที่ check point จะเปลี่ยนอย่างไร?</summary>
+    <p>RMSE ที่ GCP อาจยังเล็ก แต่ RMSE ที่ check point ซึ่งอยู่ไกลจาก GCP จะโตขึ้น เพราะแบบจำลองกำลัง <b>extrapolate</b> ออกไปนอกบริเวณที่มีข้อมูล ความคลาดเคลื่อนเล็กน้อยของการชี้ GCP จึงถูกขยายตามระยะทาง แนวคิดนี้แสดงด้วยแบบจำลองและข้อมูลสังเคราะห์ ผลนี้จะยิ่งรุนแรงกับ polynomial ลำดับสูง</p>
+  </details>
+  <div class="fact-grid">
+    <div class="fact"><b>MODEL</b>ภาพจำลองนี้เป็นการแปลงแบบ similarity (เลื่อน หมุน ขยาย) ซึ่ง polynomial ลำดับที่ 1 (affine) ครอบคลุมได้พอดี</div>
+    <div class="fact"><b>ASSUMPTION</b>noise ของการชี้ GCP เป็นค่าคงที่ (seeded) ต่อจุด คูณด้วย σ · ไม่มี relief displacement</div>
+    <div class="fact"><b>LIMITATION</b>ภาพจริงที่มีภูมิประเทศสูงต่ำต้องทำ orthorectification ด้วย DEM ซึ่ง polynomial แก้ไม่ได้ <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>FACT</b>จำนวน GCP ขั้นต่ำ: ลำดับ 1 ≥ 3, ลำดับ 2 ≥ 6, ลำดับ 3 ≥ 10 จุด (เท่ากับจำนวนสัมประสิทธิ์ต่อแกน) <span class="src">แนวคิดทั่วไป</span></div>
+  </div>
+</section>
+
+<!-- ================= MODULE 3 ================= -->
+<section id="m3" class="card" aria-labelledby="h3">
+  <h2 id="h3">03 / Radiometric Correction — ทำให้ค่ามีความหมายทางฟิสิกส์</h2>
+  <p class="lead">Detector ถูกออกแบบให้ตอบสนองแบบเชิงเส้นต่อ spectral radiance ถ้ารู้ gain และ offset ของ sensor ก็ย้อนจาก DN กลับเป็น radiance ได้ <span class="src">แนวคิดทั่วไป</span></p>
+  <div class="cols">
+    <div>
+      <h3>A. สอบเทียบ DN → radiance</h3>
+      <div class="seg" role="radiogroup" aria-label="bit depth">
+        <label><input type="radio" name="r-bits" value="255" checked> 8-bit (DNmax 255)</label>
+        <label><input type="radio" name="r-bits" value="4095"> 12-bit (DNmax 4095)</label>
+      </div>
+      <div data-ctrl="r-dn"></div>
+      <div data-ctrl="r-lmin"></div>
+      <div data-ctrl="r-lmax"></div>
+      <h3>B. Enhancement (linear stretch) <span class="ext">คำอธิบายเสริม</span></h3>
+      <div data-ctrl="r-a"></div>
+      <div data-ctrl="r-b"></div>
+      <div class="row"><button class="btn" type="button" id="r-reset">↶ Reset</button></div>
+    </div>
+    <div>
+      <figure>
+        <svg id="r-svg" viewBox="0 0 420 300" role="img" aria-labelledby="r-svg-t r-svg-d"><title id="r-svg-t">กราฟการตอบสนองของ sensor</title><desc id="r-svg-d">แกนนอนคือ spectral radiance แกนตั้งคือ DN เส้นตรงเริ่มจาก Lmin ที่ DN 0 ถึง Lmax ที่ DNmax แล้วอิ่มตัว วงกลมสีเขียวอมฟ้าคือค่าที่สอบเทียบถูกต้อง กากบาทสีแดงคือค่าที่ได้เมื่อนำ DN ที่ยืด contrast แล้วไปเข้าสูตร</desc></svg>
+        <div class="legend"><span><i style="border-color:var(--teal)"></i>response DN = G·L + B</span><span><i style="border-color:#999;border-top-style:dashed"></i>อิ่มตัว</span><span>● ค่าที่ถูกต้อง</span><span style="color:var(--bad)">✕ ใช้ DN ที่ยืดแล้ว (ผิด)</span></div>
+      </figure>
+      <div id="r-msg" class="note info" aria-live="polite"></div>
+      <div class="metrics">
+        <div class="metric"><span>Radiance L (ถูกต้อง; W m⁻² sr⁻¹ µm⁻¹)</span><strong id="r-L">—</strong></div>
+        <div class="metric"><span>Gain G [DN/(W m⁻² sr⁻¹ µm⁻¹)]</span><strong id="r-G">—</strong></div>
+        <div class="metric"><span>Offset B (DN)</span><strong id="r-B">—</strong></div>
+        <div class="metric"><span>ตรวจย้อน G·L + B</span><strong id="r-chk">—</strong></div>
+        <div class="metric"><span>DN หลังยืด contrast</span><strong id="r-dn2">—</strong></div>
+        <div class="metric bad"><span>“L” จาก DN ที่ยืดแล้ว (ผิด; W m⁻² sr⁻¹ µm⁻¹)</span><strong id="r-Lbad">—</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="eq">DN = G·L + B &nbsp;⇔&nbsp; L = (DN − B)/G &nbsp;=&nbsp; L<sub>min</sub> + DN·(L<sub>max</sub> − L<sub>min</sub>)/DN<sub>max</sub></div>
+  <p class="small"><b>หน่วยแบบจำลอง:</b> ทุกค่า radiance ในบททดลอง (L, L<sub>min</sub>, L<sub>max</sub>, L<sub>p</sub>, L<sub>tot</sub>) ใช้ W m⁻² sr⁻¹ µm⁻¹; G ใช้ DN ต่อหน่วย radiance; B เป็น DN; reflectance ρ และ transmittance T ไม่มีหน่วย ค่าตัวเลขเป็นค่าจำลอง ไม่ใช่ calibration metadata จาก sensor จริง</p>
+  <ul class="vars"><li>G = DN<sub>max</sub>/(L<sub>max</sub> − L<sub>min</sub>), B = −G·L<sub>min</sub> สามรูปนี้คือสมการเดียวกัน <span class="src">แนวคิดทั่วไป</span></li><li>L<sub>min</sub> = radiance ที่ให้ DN = 0, L<sub>max</sub> = radiance ต่ำสุดที่ทำให้ DN = DN<sub>max</sub> (จุดอิ่มตัว) <span class="src">แนวคิดทั่วไป</span></li><li>บางเอกสารใช้หน่วย mW cm⁻² sr⁻¹ µm⁻¹ (Landsat ยุคเก่า) · 1 mW cm⁻² sr⁻¹ µm⁻¹ = 10 W m⁻² sr⁻¹ µm⁻¹ ซึ่งเป็นหน่วยที่ metadata ปัจจุบันใช้ <span class="ext">คำอธิบายเสริม</span></li><li>ค่า L<sub>min</sub>, L<sub>max</sub>, G, B เป็นค่าเฉพาะของแต่ละ sensor และแต่ละแบนด์ ต้องอ่านจาก metadata ของภาพนั้น</li></ul>
+
+  <div class="cols">
+    <div>
+      <h3>C. เครื่องคิด DN = G·L + B</h3>
+      <div data-ctrl="s-g"></div>
+      <div data-ctrl="s-b"></div>
+      <div data-ctrl="s-l"></div>
+      <div class="metrics"><div class="metric"><span>DN ที่ sensor บันทึก (ปัดเศษ, จำกัด 0–255)</span><strong id="s-dn">—</strong></div><div class="metric"><span>สถานะ</span><strong id="s-state">—</strong></div></div>
+    </div>
+    <div>
+      <h3>D. บรรยากาศและ haze <span class="src">แนวคิดทั่วไป</span></h3>
+      <div data-ctrl="h-rho"></div>
+      <div data-ctrl="h-elev"></div>
+      <div data-ctrl="h-t"></div>
+      <div data-ctrl="h-lp"></div>
+      <div data-ctrl="h-d"></div>
+    </div>
+  </div>
+  <div class="eq">E = E₀ cos θ₀ / d² ,&nbsp;&nbsp; θ₀ = 90° − sun elevation ,&nbsp;&nbsp; L<sub>tot</sub> = ρET/π + L<sub>p</sub></div>
+  <ul class="vars"><li>E₀ = 1 550 W m⁻² µm⁻¹ (exoatmospheric irradiance) <span class="ill">ILLUSTRATIVE</span>, d = ระยะโลก–ดวงอาทิตย์ (AU), T = transmittance, L<sub>p</sub> = path radiance <span class="src">แนวคิดทั่วไป</span></li><li>Dark object subtraction: น้ำลึกใสมี ρ ≈ 0 ใน NIR สัญญาณที่วัดได้เหนือน้ำจึงประมาณได้ว่าเป็น L<sub>p</sub> แล้วนำไปลบออกจากทุก pixel <span class="src">แนวคิดทั่วไป</span></li></ul>
+  <figure>
+    <svg id="h-svg" viewBox="0 0 460 220" role="img" aria-labelledby="h-svg-t h-svg-d"><title id="h-svg-t">แผนภูมิแท่ง radiance ก่อนและหลังลบ path radiance</title><desc id="h-svg-d">แท่งแรกคือเป้าหมาย (เช่นพืช) ก่อนแก้ แท่งที่สองคือหลังลบค่าเหนือน้ำ แท่งที่สามและสี่คือน้ำก่อนและหลังแก้ ส่วนลายเฉียงคือ path radiance</desc></svg>
+  </figure>
+  <div class="metrics">
+    <div class="metric"><span>E บนพื้นผิว (W m⁻² µm⁻¹)</span><strong id="h-E">—</strong></div>
+    <div class="metric"><span>L<sub>tot</sub> เป้าหมาย (W m⁻² sr⁻¹ µm⁻¹)</span><strong id="h-Lt">—</strong></div>
+    <div class="metric"><span>สัดส่วน haze ใน L<sub>tot</sub></span><strong id="h-frac">—</strong></div>
+    <div class="metric"><span>ρ ถ้าไม่ลบ haze</span><strong id="h-rho-raw">—</strong></div>
+    <div class="metric"><span>ρ หลัง DOS</span><strong id="h-rho-dos">—</strong></div>
+    <div class="metric"><span>L<sub>tot</sub>/sin(elev) (W m⁻² sr⁻¹ µm⁻¹; normalise ดวงอาทิตย์) <span class="src">แนวคิดทั่วไป</span></span><strong id="h-norm">—</strong></div>
+  </div>
+  <details class="predict"><summary>ทำนายก่อน: ถ้านำ DN = 180 (ได้จากการยืด contrast ของ DN 100) ไปเข้าสูตรสอบเทียบ จะได้ L เท่าไร และค่านี้มีความหมายหรือไม่?</summary>
+    <p>2 + 180 × 10/255 = <b>9.0588</b> สูตรคืนค่าตัวเลขให้เสมอ แต่ค่านี้<b>ไม่ใช่ radiance จริง</b> radiance จริงยังเป็น 5.9216 เหมือนเดิม เพราะสูตรสอบเทียบผูกไว้กับ DN ที่ sensor บันทึก การยืด contrast เปลี่ยนความสัมพันธ์นั้นไปแล้ว ในกราฟ ✕ สีแดงยังอยู่บนเส้น แต่ค่า L ของมันผิดตำแหน่ง</p>
+  </details>
+  <details class="predict"><summary>ทำนายก่อน: ลดมุมเงยดวงอาทิตย์จาก 55° เป็น 25° แล้ว ρ หลัง DOS จะเปลี่ยนหรือไม่?</summary>
+    <p>ภายใต้แบบจำลองนี้ ρ หลัง DOS <b>ไม่เปลี่ยน</b> เพราะเราหารด้วย E ที่คำนวณจากมุมดวงอาทิตย์ที่ถูกต้อง แต่ L<sub>tot</sub> จะลดลงมาก นี่คือเหตุผลที่ต้องทำ sun elevation correction ก่อนต่อภาพหลายวัน <span class="src">แนวคิดทั่วไป</span> ในภาพจริง ρ จะยังผิดได้ถ้าภูมิประเทศเอียง เพราะสูตรนี้ไม่คิดผลของ topography <span class="src">แนวคิดทั่วไป</span></p>
+  </details>
+  <div class="fact-grid">
+    <div class="fact"><b>ASSUMPTION</b>ผิว Lambertian (ประมาณจากรูป ρET/π), haze สม่ำเสมอทั้งภาพ, มีวัตถุที่ ρ ≈ 0 ในแบนด์นั้น</div>
+    <div class="fact"><b>LIMITATION</b>DOS แก้เฉพาะส่วนที่ <b>บวกเพิ่ม</b> (L<sub>p</sub>) แต่ไม่ได้แก้ T ถ้าต้องการ surface reflectance จริงต้องใช้แบบจำลอง radiative transfer <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>FACT</b>Calibration (DN → L) ≠ atmospheric correction (L → surface reflectance) เป็นคนละขั้นใน process chain <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>LIMITATION</b>เมื่อ DN = DN<sub>max</sub> (อิ่มตัว) เรารู้เพียงว่า L ≥ L<sub>max</sub> แต่ไม่รู้ค่าจริง</div>
+  </div>
+</section>
+
+<!-- ================= MODULE 4 ================= -->
+<section id="m4" class="card" aria-labelledby="h4">
+  <h2 id="h4">04 / Resampling — ค่าใหม่ของ pixel มาจากไหน?</h2>
+  <p class="lead">หลังแปลงพิกัดแล้ว จุดกึ่งกลางของ pixel ใน output แทบไม่เคยตกตรงกึ่งกลาง pixel ของ input พอดี จึงต้องประมาณค่าใหม่จาก pixel รอบข้าง <span class="src">แนวคิดทั่วไป</span></p>
+  <div class="cols">
+    <div>
+      <div class="seg" role="radiogroup" aria-label="วิธี resample">
+        <label><input type="radio" name="rs-m" value="nn" checked> Nearest neighbour</label>
+        <label><input type="radio" name="rs-m" value="bl"> Bilinear</label>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="ชนิดข้อมูล" style="margin-top:8px">
+        <label><input type="radio" name="rs-d" value="cont" checked> ข้อมูลต่อเนื่อง (DN)</label>
+        <label><input type="radio" name="rs-d" value="cat"> ข้อมูลกลุ่ม (land cover)</label>
+      </div>
+      <div data-ctrl="rs-sx"></div>
+      <div data-ctrl="rs-sy"></div>
+      <div data-ctrl="rs-rot"></div>
+      <div class="row"><button class="btn" type="button" id="rs-reset">↶ Reset</button></div>
+      <div class="metrics">
+        <div class="metric"><span>Output cell ที่เลือก</span><strong id="rs-cell">—</strong></div>
+        <div class="metric"><span>ตกที่พิกัด input (u, v)</span><strong id="rs-uv">—</strong></div>
+        <div class="metric"><span>ค่า NN</span><strong id="rs-nn">—</strong></div>
+        <div class="metric"><span>ค่า Bilinear</span><strong id="rs-bl">—</strong></div>
+      </div>
+      <div class="eq" id="rs-eq">—</div>
+    </div>
+    <div>
+      <figure>
+        <svg id="rs-svg" viewBox="0 0 500 270" role="img" aria-labelledby="rs-svg-t rs-svg-d"><title id="rs-svg-t">ตาราง input และ output ของการ resample</title><desc id="rs-svg-d">ซ้ายคือ input 6×6 พร้อมจุดที่ output แต่ละ cell ไปตก ขวาคือ output 6×6 ที่คำนวณได้ แตะ cell ด้านขวาเพื่อดูวิธีคำนวณ</desc></svg>
+        <figcaption>ซ้าย: input (ภาพก่อนแปลง) + จุดที่ output ไปตก · ขวา: output (แตะ cell เพื่อดูการคำนวณ) · ∅ = NoData (ตกนอกภาพ)</figcaption>
+      </figure>
+      <div id="rs-msg" class="note info" aria-live="polite"></div>
+      <div class="tablewrap"><table aria-label="สถิติ input เทียบ output"><thead><tr><th>สถิติ</th><th>Input</th><th>Output</th></tr></thead><tbody id="rs-stats"></tbody></table></div>
+    </div>
+  </div>
+  <details class="predict"><summary>ทำนายก่อน: เปลี่ยนจาก NN เป็น Bilinear แล้วค่าสูงสุด (DN 200) ของ input จะยังอยู่ใน output หรือไม่?</summary>
+    <p>โดยทั่วไปจะไม่อยู่ เพราะ bilinear เฉลี่ยถ่วงน้ำหนักจาก 4 pixel ค่าสุดขั้วจึงถูกลดลง (<span class="src">แนวคิดทั่วไป</span>: “some extremes of the data file values are lost”) ส่วน NN คัดลอกค่าเดิมมาทั้งค่า จึงเก็บค่าสุดขั้วไว้ได้ (<span class="src">แนวคิดทั่วไป</span>) แต่ตำแหน่งอาจเลื่อนได้สูงสุดครึ่ง pixel</p>
+  </details>
+  <details class="predict"><summary>ทำนายก่อน: ใช้ Bilinear กับข้อมูล land cover (1 = น้ำ, 2 = ป่า, 3 = เมือง) จะเกิดอะไรขึ้น?</summary>
+    <p>จะได้ค่าอย่าง 1.6 หรือ 2.4 ซึ่ง<b>ไม่มี class นี้อยู่จริง</b> ข้อมูลกลุ่ม (categorical) จึงต้องใช้ NN <span class="ext">คำอธิบายเสริม</span> ข้อนี้ยังแสดงด้วยว่าภาพที่ “ดูเนียนกว่า” ไม่ได้แปลว่าถูกต้องกว่า</p>
+  </details>
+  <div class="fact-grid">
+    <div class="fact"><b>FACT</b>NN: เร็วและเก็บค่าเดิมไว้ แต่เกิดขั้นบันไดตามแนวเฉียงเมื่อย่อขนาด pixel <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>FACT</b>Bilinear: interpolate ลำดับที่ 1 จาก 4 pixel ผลนุ่มขึ้น แต่ขอบเบลอและค่าสุดขั้วหาย <span class="src">แนวคิดทั่วไป</span></div>
+    <div class="fact"><b>FACT</b>Cubic convolution ใช้ 16 pixel คำนวณหนักที่สุด ผลขึ้นกับข้อมูล <span class="src">แนวคิดทั่วไป</span> · ไม่ได้ทำ simulation ในหน้านี้</div>
+    <div class="fact"><b>KEY</b>Resampling ไม่ได้เพิ่มข้อมูลใหม่ ความแม่นยำเชิงตำแหน่งมาจาก transformation และ GCP (module 2)</div>
+  </div>
+</section>
+
+<!-- ================= MODULE 5 ================= -->
+<section id="m5" class="card" aria-labelledby="h5">
+  <h2 id="h5">05 / Integrated Decision Lab</h2>
+  <p class="lead">อ่านสถานการณ์ เลือกประเภทปัญหาและวิธีแก้ แล้วทำนายผลก่อนกด “ตรวจ” คำอธิบายข้อจำกัดจะแสดงหลังตรวจ</p>
+  <div id="dl"></div>
+  <div class="metrics"><div class="metric"><span>ผลรวม Decision Lab</span><strong id="dl-score">0 / 4</strong></div></div>
+</section>
+
+<!-- ================= MODULE 6 ================= -->
+<section id="m6" class="card" aria-labelledby="h6">
+  <h2 id="h6">06 / Mastery Gate</h2>
+  <p class="lead">ทุกข้อต้องเขียน <b>เหตุผล</b> ก่อนกดตรวจ · ระดับ 1 มี hint · ระดับ 2 hint จะเปิดหลังตอบผิดครั้งแรก · ระดับ 3 ไม่มี hint (fading)</p>
+  <div class="note warn">หน้านี้ตรวจได้เพียงตัวเลือกและตัวเลข ส่วน <b>เหตุผล</b> ต้องส่งให้ Claude ตรวจ กดปุ่ม “สรุปผลเพื่อส่ง Claude” ที่ท้าย module แล้ววางในแชต การผ่าน Gate ในหน้านี้ยังไม่เท่ากับ mastery จนกว่าเหตุผลจะผ่านการตรวจ</div>
+  <div id="mg"></div>
+  <div class="metrics">
+    <div class="metric"><span>ถูกตั้งแต่ครั้งแรก</span><strong id="mg-first">0 / 8</strong></div>
+    <div class="metric"><span>ผ่านแล้ว</span><strong id="mg-done">0 / 8</strong></div>
+    <div class="metric"><span>สถานะ Gate</span><strong id="mg-state">ยังไม่เริ่ม</strong></div>
+  </div>
+  <div class="row"><button class="btn primary" type="button" id="mg-export">สรุปผลเพื่อส่ง Claude</button><button class="btn" type="button" id="mg-copy">คัดลอก</button></div>
+  <textarea class="out" id="mg-out" aria-label="สรุปผลสำหรับคัดลอก" readonly placeholder="กด “สรุปผลเพื่อส่ง Claude” แล้วข้อความจะปรากฏที่นี่"></textarea>
+</section>
+
+<!-- ================= SOURCES ================= -->
+<section id="src" class="card" aria-labelledby="hs">
+<h2 id="hs">แหล่งอ้างอิงสาธารณะและข้อจำกัด</h2>
+<p>สื่อนี้เรียบเรียงเพื่อการศึกษาโดยใช้แบบจำลองและตัวเลขสังเคราะห์ ไม่ได้เป็นสำเนาหรือคำแปลสไลด์วิชาใด และไม่ได้แจกจ่ายเอกสารประกอบการสอนต้นฉบับ</p>
+<ul>
+<li><a href="https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product" rel="noopener noreferrer">USGS — Using the Landsat Level-1 Data Product</a>: DN, radiance, TOA reflectance และ calibration metadata</li>
+<li><a href="https://www.usgs.gov/landsat-missions/landsat-collection-2-level-1-data" rel="noopener noreferrer">USGS — Landsat Collection 2 Level-1 Data</a>: ผลิตภัณฑ์และข้อจำกัดด้าน geometric/radiometric processing</li>
+<li><a href="https://www.asprs.org/ItemDetail?Category=PUB&amp;WebsiteKey=e8e7bedc-f8a0-4a72-9989-95fd785baf8a&amp;iProductCode=PAS2024" rel="noopener noreferrer">ASPRS — Positional Accuracy Standards for Digital Geospatial Data, Edition 2 (2024)</a>: หลักการประเมินความถูกต้องเชิงตำแหน่ง</li>
+</ul>
+<p>การสอนเรื่อง affine transformation, least squares, resampling และความคลาดเคลื่อนของ sensor เป็นคำอธิบายใหม่บนพื้นฐานคณิตศาสตร์และวิชาการทั่วไป ไม่ใช่ผลการปรับเทียบภาพจริง</p>
+<p class="small">การทดลองนี้ไม่มีข้อมูลจริงของหน่วยงานหรือสถานีสำรวจ และไม่ได้ส่งข้อมูลออกสู่ภายนอก · สิทธิ์โค้ดและเนื้อหาแยกกันตามเอกสาร <a href="../../CODE_AND_CONTENT_RIGHTS.md">CODE_AND_CONTENT_RIGHTS.md</a> · 006D local release candidate</p>
+</section>
+</main>
+
+<script>
+'use strict';
+/* ====================== PURE MODEL FUNCTIONS (exported for QA) ====================== */
+const RS = (() => {
+  const fin = (...a) => a.every(Number.isFinite);
+  function calib(DN, Lmin, Lmax, DNmax) {
+    if (!fin(DN, Lmin, Lmax, DNmax) || DNmax <= 0 || Lmax <= Lmin) throw new RangeError('calib: invalid input');
+    return Lmin + DN * (Lmax - Lmin) / DNmax;
+  }
+  function gainOffset(Lmin, Lmax, DNmax) {
+    if (!fin(Lmin, Lmax, DNmax) || Lmax <= Lmin) throw new RangeError('gainOffset: invalid input');
+    const G = DNmax / (Lmax - Lmin); return { G, B: -G * Lmin };
+  }
+  function sensorDN(L, G, B, DNmax) {
+    if (!fin(L, G, B, DNmax) || G <= 0) throw new RangeError('sensorDN: invalid input');
+    const raw = G * L + B, q = Math.round(raw);
+    return { raw, dn: Math.min(DNmax, Math.max(0, q)), state: q > DNmax ? 'high' : q < 0 ? 'low' : 'ok' };
+  }
+  function invDN(DN, G, B) { if (!fin(DN, G, B) || G === 0) throw new RangeError('invDN'); return (DN - B) / G; }
+  function stretch(DN, a, b, DNmax) {
+    if (!fin(DN, a, b, DNmax) || b <= a) throw new RangeError('stretch: invalid input');
+    return Math.min(DNmax, Math.max(0, Math.round((DN - a) * DNmax / (b - a))));
+  }
+  function forward(X, Y, p) {
+    const c = 50, t = p.rot * Math.PI / 180, cs = Math.cos(t), sn = Math.sin(t);
+    return [c + p.s * ((X - c) * cs - (Y - c) * sn) + p.dx, c + p.s * ((X - c) * sn + (Y - c) * cs) + p.dy];
+  }
+  function solve3(N, r) {
+    const M = N.map((row, i) => [...row, r[i]]);
+    const scale = Math.max(...N.flat().map(Math.abs), 1);
+    for (let k = 0; k < 3; k++) {
+      let p = k; for (let i = k + 1; i < 3; i++) if (Math.abs(M[i][k]) > Math.abs(M[p][k])) p = i;
+      if (Math.abs(M[p][k]) < 1e-9 * scale) throw new RangeError('singular: GCP collinear or too few');
+      [M[k], M[p]] = [M[p], M[k]];
+      for (let i = k + 1; i < 3; i++) { const f = M[i][k] / M[k][k]; for (let j = k; j < 4; j++) M[i][j] -= f * M[k][j]; }
+    }
+    const x = [0, 0, 0];
+    for (let i = 2; i >= 0; i--) { let s = M[i][3]; for (let j = i + 1; j < 3; j++) s -= M[i][j] * x[j]; x[i] = s / M[i][i]; }
+    return x;
+  }
+  /* first-order polynomial, map(X,Y) -> image(x,y); returns [a1,a2,a3],[b1,b2,b3] */
+  function fitAffine(map, img) {
+    if (map.length < 3 || map.length !== img.length) throw new RangeError('fitAffine: need >= 3 pairs');
+    const N = [[0, 0, 0], [0, 0, 0], [0, 0, 0]], rx = [0, 0, 0], ry = [0, 0, 0];
+    map.forEach(([X, Y], k) => { const a = [1, X, Y]; for (let i = 0; i < 3; i++) { for (let j = 0; j < 3; j++) N[i][j] += a[i] * a[j]; rx[i] += a[i] * img[k][0]; ry[i] += a[i] * img[k][1]; } });
+    return { a: solve3(N, rx), b: solve3(N, ry) };
+  }
+  const applyAffine = (f, X, Y) => [f.a[0] + f.a[1] * X + f.a[2] * Y, f.b[0] + f.b[1] * X + f.b[2] * Y];
+  function invertAffine(f, x, y) {
+    const det = f.a[1] * f.b[2] - f.a[2] * f.b[1];
+    if (Math.abs(det) < 1e-12) throw new RangeError('invertAffine: singular');
+    const u = x - f.a[0], v = y - f.b[0];
+    return [(f.b[2] * u - f.a[2] * v) / det, (-f.b[1] * u + f.a[1] * v) / det];
+  }
+  function rmse(res) { if (!res.length) return NaN; return Math.sqrt(res.reduce((s, [vx, vy]) => s + vx * vx + vy * vy, 0) / res.length); }
+  /* resampling on grid F[row][col]; input continuous coords (u,v), pixel centres at +0.5 */
+  function sampleNN(F, u, v) {
+    const R = F.length, C = F[0].length; if (!(u >= 0 && u < C && v >= 0 && v < R)) return null;
+    return F[Math.min(R - 1, Math.floor(v))][Math.min(C - 1, Math.floor(u))];
+  }
+  function sampleBL(F, u, v) {
+    const R = F.length, C = F[0].length; if (!(u >= 0 && u < C && v >= 0 && v < R)) return null;
+    const fx = Math.min(C - 1, Math.max(0, u - 0.5)), fy = Math.min(R - 1, Math.max(0, v - 0.5));
+    const j0 = Math.min(C - 2, Math.floor(fx)), i0 = Math.min(R - 2, Math.floor(fy)), a = fx - j0, b = fy - i0;
+    const f00 = F[i0][j0], f10 = F[i0][j0 + 1], f01 = F[i0 + 1][j0], f11 = F[i0 + 1][j0 + 1];
+    return { value: (1 - a) * (1 - b) * f00 + a * (1 - b) * f10 + (1 - a) * b * f01 + a * b * f11, i0, j0, a, b, f: [f00, f10, f01, f11] };
+  }
+  function irradiance(E0, elevDeg, d) { if (!fin(E0, elevDeg, d) || d <= 0) throw new RangeError('irradiance'); return E0 * Math.cos((90 - elevDeg) * Math.PI / 180) / (d * d); }
+  const totalRadiance = (rho, E, T, Lp) => rho * E * T / Math.PI + Lp;
+  return { calib, gainOffset, sensorDN, invDN, stretch, forward, fitAffine, applyAffine, invertAffine, rmse, sampleNN, sampleBL, irradiance, totalRadiance };
+})();
+window.RS = RS;
+
+/* ====================== UI HELPERS ====================== */
+(function () {
+  const $ = id => document.getElementById(id);
+  const fmt = (x, n = 2) => Number.isFinite(x) ? x.toFixed(n) : '—';
+  const NS = 'http://www.w3.org/2000/svg';
+  const progress = { m1: false, m2: false, m3: false, m4: false };
+  function markVisit(m) { if (!progress[m]) { progress[m] = true; const el = $('nav-' + m); if (el) el.textContent = '✓'; } }
+
+  /* control factory: slider + − number + */
+  const CTRL = {};
+  function ctrl(id, label, min, max, step, value, unit, help, onChange) {
+    const host = document.querySelector(`[data-ctrl="${id}"]`);
+    host.className = 'control';
+    host.innerHTML = `<label for="${id}">${label} <output id="${id}-out"></output></label>
+      <input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}" aria-describedby="${id}-help">
+      <div class="tools"><button type="button" aria-label="ลด ${label}" data-d="-1">−</button>
+      <input id="${id}-num" type="number" inputmode="decimal" min="${min}" max="${max}" step="${step}" value="${value}" aria-label="กรอก ${label}">
+      <button type="button" aria-label="เพิ่ม ${label}" data-d="1">+</button></div>
+      <p class="help" id="${id}-help">${help || ''}</p>`;
+    const r = $(id), n = $(id + '-num');
+    const dec = (String(step).split('.')[1] || '').length;
+    const show = () => { $(id + '-out').textContent = Number(r.value).toFixed(dec) + (unit ? ' ' + unit : ''); n.value = Number(r.value).toFixed(dec); n.removeAttribute('aria-invalid'); };
+    const setv = v => { const mn = +r.min, mx = +r.max, st = +r.step; if (!Number.isFinite(v)) return false; const q = Math.min(mx, Math.max(mn, mn + Math.round((v - mn) / st) * st)); r.value = String(Number(q.toFixed(6))); show(); onChange(); return v >= mn && v <= mx; };
+    r.addEventListener('input', () => { show(); onChange(); });
+    n.addEventListener('change', () => { const v = parseFloat(n.value); if (!setv(v)) { n.setAttribute('aria-invalid', 'true'); $(id + '-help').textContent = `ค่าต้องอยู่ระหว่าง ${min} ถึง ${max} — ระบบปรับให้อยู่ในช่วงแล้ว`; } else $(id + '-help').textContent = help || ''; });
+    host.querySelectorAll('button[data-d]').forEach(b => b.addEventListener('click', () => setv(+r.value + (+b.dataset.d) * (+r.step))));
+    CTRL[id] = { get: () => +r.value, set: v => setv(v), def: value, el: r, setRange: (mn, mx) => { r.min = mn; r.max = mx; n.min = mn; n.max = mx; } };
+    show();
+  }
+  const val = id => CTRL[id].get();
+  const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+  function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function txt(parent, x, y, s, attrs) { const t = el('text', Object.assign({ x, y }, attrs || {}), parent); t.textContent = s; return t; }
+
+  /* ====================== MODULE 1 ====================== */
+  const SCENE = [
+    [12, 14, 90, 132, 210, 145, 150, 148], [11, 13, 95, 135, 212, 142, 149, 151], [10, 12, 98, 138, 211, 140, 147, 153], [9, 15, 101, 141, 214, 139, 146, 155],
+    [13, 18, 104, 143, 211, 137, 144, 152], [15, 22, 108, 146, 209, 136, 143, 150], [17, 26, 111, 148, 213, 135, 141, 149], [20, 30, 115, 150, 215, 134, 140, 147]];
+  const m1 = { i: 3, j: 4 };
+  const smin = Math.min(...SCENE.flat()), smax = Math.max(...SCENE.flat());
+  function m1Render() {
+    const svg = $('m1-svg'); svg.innerHTML = svg.querySelector('title').outerHTML + svg.querySelector('desc').outerHTML;
+    const st = $('m1-stretch').checked, nums = $('m1-nums').checked, cs = 38, o = 13;
+    const g = el('g', { class: 'cellgrid' }, svg);
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) {
+      const dn = SCENE[i][j], d = st ? Math.round((dn - smin) * 255 / (smax - smin)) : dn;
+      const r = el('rect', { x: o + j * cs, y: o + i * cs, width: cs - 1, height: cs - 1, fill: `rgb(${d},${d},${d})`, tabindex: 0, role: 'button', 'aria-label': `แถว ${i} คอลัมน์ ${j} DN ${dn}`, style: 'cursor:pointer' }, g);
+      if (i === m1.i && j === m1.j) { r.setAttribute('stroke', '#e0681a'); r.setAttribute('stroke-width', 3); }
+      const pick = () => { m1.i = i; m1.j = j; $('m1-row').value = i; $('m1-col').value = j; m1Render(); markVisit('m1'); };
+      r.addEventListener('click', pick); r.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      if (nums) txt(g, o + j * cs + cs / 2, o + i * cs + cs / 2 + 4, dn, { 'text-anchor': 'middle', 'font-size': 11, fill: d > 120 ? '#000' : '#fff' });
+    }
+    for (let k = 0; k < 8; k++) { txt(svg, o + k * cs + cs / 2, 10, k, { 'text-anchor': 'middle', 'font-size': 9, fill: '#536c73' }); txt(svg, 6, o + k * cs + cs / 2 + 3, k, { 'text-anchor': 'middle', 'font-size': 9, fill: '#536c73' }); }
+    const dn = SCENE[m1.i][m1.j], d = st ? Math.round((dn - smin) * 255 / (smax - smin)) : dn;
+    $('m1-ij').textContent = `(${m1.i}, ${m1.j})`; $('m1-dn').textContent = dn; $('m1-disp').textContent = d + (st ? ' (ยืดแล้ว)' : '');
+    $('m1-xy').textContent = `${(650000 + (m1.j + 0.5) * 10).toFixed(0)}, ${(1520000 - (m1.i + 0.5) * 10).toFixed(0)}`;
+    $('m1-msg').className = 'note ' + (st ? 'warn' : 'info');
+    $('m1-msg').textContent = st ? `ความสว่างบนจอเปลี่ยนเป็น ${d} แต่ DN ในไฟล์ยังเป็น ${dn} — enhancement เปลี่ยนเฉพาะการแสดงผล ไม่ได้เปลี่ยนค่าที่วัดได้` : 'เปิด “ยืด contrast” แล้วสังเกตว่า DN ในไฟล์เปลี่ยนหรือไม่';
+  }
+  ['m1-row', 'm1-col'].forEach(id => $(id).addEventListener('change', () => { const i = parseInt($('m1-row').value, 10), j = parseInt($('m1-col').value, 10); if (i >= 0 && i < 8 && j >= 0 && j < 8) { m1.i = i; m1.j = j; m1Render(); markVisit('m1'); } else { $('m1-msg').className = 'note bad'; $('m1-msg').textContent = 'แถวและคอลัมน์ต้องเป็นจำนวนเต็ม 0–7'; } }));
+  ['m1-nums', 'm1-stretch'].forEach(id => $(id).addEventListener('change', () => { m1Render(); markVisit('m1'); }));
+
+  /* ====================== MODULE 2 ====================== */
+  const PTS = [
+    { id: 'P1', X: 15, Y: 15, ex: 0.6, ey: -0.4 }, { id: 'P2', X: 85, Y: 18, ex: -0.5, ey: 0.7 }, { id: 'P3', X: 52, Y: 88, ex: 0.3, ey: 0.8 },
+    { id: 'P4', X: 18, Y: 72, ex: -0.8, ey: -0.2 }, { id: 'P5', X: 82, Y: 78, ex: 0.7, ey: 0.5 }, { id: 'P6', X: 50, Y: 48, ex: -0.3, ey: -0.9 },
+    { id: 'P7', X: 32, Y: 40, ex: 0.9, ey: 0.1 }, { id: 'P8', X: 68, Y: 60, ex: -0.6, ey: -0.6 }, { id: 'C1', X: 8, Y: 10, ex: 0.4, ey: 0.9 },
+    { id: 'C2', X: 22, Y: 8, ex: -0.9, ey: 0.3 }, { id: 'C3', X: 12, Y: 24, ex: 0.2, ey: -0.7 }, { id: 'C4', X: 26, Y: 22, ex: -0.4, ey: -0.5 }];
+  const ORDER = { good: ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'C1', 'C2', 'C3', 'C4'], cluster: ['C1', 'C2', 'C3', 'C4', 'P1', 'P7', 'P6', 'P8', 'P4', 'P2', 'P5', 'P3'] };
+  const ROAD = [[0, 62], [30, 55], [55, 40], [80, 35], [100, 22]], ROAD2 = [[40, 0], [45, 30], [55, 40], [62, 70], [70, 100]];
+  const byId = Object.fromEntries(PTS.map(p => [p.id, p]));
+  function m2Render() {
+    const par = { dx: val('g-dx'), dy: val('g-dy'), rot: val('g-rot'), s: val('g-scale') }, sig = val('g-sigma'), n = val('g-n');
+    const dist = radio('g-dist'), view = radio('g-view');
+    const order = ORDER[dist], gcpIds = order.slice(0, n), cpIds = order.slice(n);
+    const obs = id => { const p = byId[id], [x, y] = RS.forward(p.X, p.Y, par); return [x + sig * p.ex, y + sig * p.ey]; };
+    let fit = null, err = null;
+    try { fit = RS.fitAffine(gcpIds.map(id => [byId[id].X, byId[id].Y]), gcpIds.map(obs)); } catch (e) { err = e.message; }
+    const svg = $('g-svg'); svg.innerHTML = svg.querySelector('title').outerHTML + svg.querySelector('desc').outerHTML;
+    const grid = el('g', { stroke: '#d5e3e2', 'stroke-width': 0.3 }, svg);
+    for (let k = 0; k <= 100; k += 20) { el('line', { x1: k, y1: 0, x2: k, y2: 100 }, grid); el('line', { x1: 0, y1: k, x2: 100, y2: k }, grid); }
+    for (let k = 0; k <= 100; k += 20) { txt(svg, k, -3, k, { 'font-size': 3.2, 'text-anchor': 'middle', fill: '#536c73' }); txt(svg, -3, k + 1, k, { 'font-size': 3.2, 'text-anchor': 'end', fill: '#536c73' }); }
+    const poly = (pts, attrs) => el('polyline', Object.assign({ points: pts.map(p => p.map(v => v.toFixed(2)).join(',')).join(' '), fill: 'none' }, attrs), svg);
+    const frame = [[0, 0], [100, 0], [100, 100], [0, 100], [0, 0]];
+    [ROAD, ROAD2].forEach(r => poly(r, { stroke: '#6f848a', 'stroke-width': 1.6, 'stroke-dasharray': '2.5 1.5' }));
+    poly(frame, { stroke: '#6f848a', 'stroke-width': 0.6, 'stroke-dasharray': '2 1' });
+    const rawRoad = r => r.map(([X, Y]) => RS.forward(X, Y, par));
+    if (view === 'raw' || !fit) {
+      [ROAD, ROAD2].forEach(r => poly(rawRoad(r), { stroke: '#c2570c', 'stroke-width': 1.6 }));
+      poly(frame.map(([X, Y]) => RS.forward(X, Y, par)), { stroke: '#c2570c', 'stroke-width': 0.6 });
+    } else {
+      const back = pts => pts.map(([x, y]) => RS.invertAffine(fit, x, y));
+      [ROAD, ROAD2].forEach(r => poly(back(rawRoad(r)), { stroke: '#176e71', 'stroke-width': 1.6 }));
+    }
+    const rows = [], gres = [], cres = [];
+    order.forEach(id => {
+      const p = byId[id], isG = gcpIds.includes(id), o = obs(id);
+      el(isG ? 'circle' : 'rect', isG ? { cx: p.X, cy: p.Y, r: 1.6, fill: '#fff', stroke: '#1e3340', 'stroke-width': 0.6 } : { x: p.X - 1.4, y: p.Y - 1.4, width: 2.8, height: 2.8, fill: '#fff', stroke: '#1e3340', 'stroke-width': 0.6 }, svg);
+      txt(svg, p.X + 2.2, p.Y - 1.6, id, { 'font-size': 3, fill: '#1e3340' });
+      if (fit) {
+        const c = RS.applyAffine(fit, p.X, p.Y), v = [o[0] - c[0], o[1] - c[1]];
+        (isG ? gres : cres).push(v);
+        rows.push(`<tr><td>${id}</td><td>${isG ? 'GCP' : 'check'}</td><td>${fmt(v[0], 3)}</td><td>${fmt(v[1], 3)}</td><td>${fmt(Math.hypot(v[0], v[1]), 3)}</td></tr>`);
+        if (view === 'raw') el('path', { d: `M${o[0] - 1.2},${o[1] + 1} L${o[0]},${o[1] - 1.2} L${o[0] + 1.2},${o[1] + 1} Z`, fill: '#c2570c' }, svg);
+        else { const back = RS.invertAffine(fit, o[0], o[1]); el('line', { x1: p.X, y1: p.Y, x2: p.X + (back[0] - p.X) * 10, y2: p.Y + (back[1] - p.Y) * 10, stroke: '#b3261e', 'stroke-width': 0.7 }, svg); }
+      }
+    });
+    $('g-table').innerHTML = rows.join('');
+    $('g-counts').textContent = `${gcpIds.length} / ${cpIds.length}`;
+    const r = 2 * n - 6; $('g-r').textContent = r;
+    const rf = RS.rmse(gres), rc = RS.rmse(cres);
+    $('g-rmse-fit').textContent = fit ? fmt(rf, 3) + ' px' : '—';
+    $('g-rmse-cp').textContent = fit ? fmt(rc, 3) + ' px' : '—';
+    $('g-cp-box').className = 'metric' + (fit && rc > 3 * Math.max(rf, 0.05) ? ' bad' : '');
+    const msg = $('g-msg');
+    if (err) { msg.className = 'note bad'; msg.textContent = 'แก้ไม่ได้: GCP อยู่บนเส้นตรงเดียวกันหรือมีน้อยเกินไป'; }
+    else if (r === 0) { msg.className = 'note warn'; msg.textContent = `r = 0: RMSE ที่ GCP = ${fmt(rf, 3)} px เพราะสมการพอดีกับข้อมูลพอดี ไม่ใช่เพราะแม่นยำ — ให้ดู RMSE ที่ check point = ${fmt(rc, 3)} px`; }
+    else { const s0 = Math.sqrt(gres.reduce((s, [a, b]) => s + a * a + b * b, 0) / r); msg.className = 'note info'; msg.textContent = `r = ${r} มีค่าสังเกตเกิน จึงประมาณ σ₀ ได้ = ${fmt(s0, 3)} px (σ ที่จำลองไว้ = ${fmt(sig, 2)} × noise ต่อจุด) · RMSE ที่ check point เป็นหลักฐานอิสระ`; }
+    const co = $('g-coef');
+    co.innerHTML = fit ? ['a₁', 'a₂', 'a₃', 'b₁', 'b₂', 'b₃'].map((k, i) => `<div class="metric"><span>${k}</span><strong>${fmt(i < 3 ? fit.a[i] : fit.b[i - 3], 4)}</strong></div>`).join('') : '';
+    const tx = parseFloat($('g-tx').value), ty = parseFloat($('g-ty').value);
+    if (Number.isFinite(tx) && Number.isFinite(ty)) { const t = RS.forward(tx, ty, par); $('g-tout').textContent = `(${fmt(t[0], 3)}, ${fmt(t[1], 3)})`; } else $('g-tout').textContent = 'กรอกตัวเลข';
+  }
+
+  /* ====================== MODULE 3 ====================== */
+  function m3Render() {
+    const DNmax = +radio('r-bits'), DN = val('r-dn'), Lmin = val('r-lmin'), Lmax = val('r-lmax'), a = val('r-a'), b = val('r-b');
+    const msg = $('r-msg'), svg = $('r-svg');
+    svg.innerHTML = svg.querySelector('title').outerHTML + svg.querySelector('desc').outerHTML;
+    const bad = id => ['r-L', 'r-G', 'r-B', 'r-chk', 'r-dn2', 'r-Lbad'].forEach(k => $(k).textContent = '—');
+    if (Lmax <= Lmin) { bad(); msg.className = 'note bad'; msg.textContent = 'L_max ต้องมากกว่า L_min — ค่าที่กรอกทำให้ gain ไม่มีความหมาย'; return; }
+    if (b <= a) { msg.className = 'note bad'; msg.textContent = 'ขอบบนของ stretch ต้องมากกว่าขอบล่าง'; }
+    const L = RS.calib(DN, Lmin, Lmax, DNmax), go = RS.gainOffset(Lmin, Lmax, DNmax);
+    const dn2 = b > a ? RS.stretch(DN, a, b, DNmax) : NaN, Lbad = Number.isFinite(dn2) ? RS.calib(dn2, Lmin, Lmax, DNmax) : NaN;
+    $('r-L').textContent = fmt(L, 4); $('r-G').textContent = fmt(go.G, 4); $('r-B').textContent = fmt(go.B, 3);
+    $('r-chk').textContent = fmt(go.G * L + go.B, 3) + ' = DN ' + DN;
+    $('r-dn2').textContent = Number.isFinite(dn2) ? dn2 : '—'; $('r-Lbad').textContent = fmt(Lbad, 4);
+    if (b > a) {
+      if (DN >= DNmax) { msg.className = 'note warn'; msg.textContent = `DN = DNmax (อิ่มตัว): radiance จริง ≥ ${fmt(Lmax, 2)} แต่ไม่รู้ค่าที่แน่นอน`; }
+      else if (DN <= 0) { msg.className = 'note warn'; msg.textContent = `DN = 0: radiance จริง ≤ ${fmt(Lmin, 2)} แต่ไม่รู้ค่าที่แน่นอน`; }
+      else { msg.className = 'note info'; msg.textContent = `radiance จริง = ${fmt(L, 4)} · ถ้าใช้ DN ที่ยืดแล้ว (${dn2}) จะได้ ${fmt(Lbad, 4)} ซึ่งผิด ${fmt(Lbad - L, 4)} — ตัวเลขออกมาได้ แต่ไม่มีความหมายทางฟิสิกส์`; }
+    }
+    // graph
+    const W = 420, H = 300, ml = 46, mr = 12, mt = 30, mb = 38, Lhi = Lmax + 0.25 * (Lmax - Lmin), Llo = Math.min(0, Lmin - 0.1 * (Lmax - Lmin));
+    const X = l => ml + (l - Llo) / (Lhi - Llo) * (W - ml - mr), Y = d => H - mb - d / DNmax * (H - mt - mb);
+    const ax = el('g', { stroke: '#9fb3b2', 'stroke-width': 1 }, svg);
+    el('line', { x1: ml, y1: H - mb, x2: W - mr, y2: H - mb }, ax); el('line', { x1: ml, y1: mt, x2: ml, y2: H - mb }, ax);
+    for (let k = 0; k <= 4; k++) { const d = DNmax * k / 4; el('line', { x1: ml - 4, y1: Y(d), x2: W - mr, y2: Y(d), stroke: '#edf3f2' }, svg); txt(svg, ml - 6, Y(d) + 4, Math.round(d), { 'font-size': 11, 'text-anchor': 'end', fill: '#536c73' }); }
+    for (let k = 0; k <= 5; k++) { const l = Llo + (Lhi - Llo) * k / 5; txt(svg, X(l), H - mb + 16, l.toFixed(1), { 'font-size': 11, 'text-anchor': 'middle', fill: '#536c73' }); }
+    txt(svg, (W + ml) / 2, H - 6, 'L (W m⁻² sr⁻¹ µm⁻¹)', { 'font-size': 12, 'text-anchor': 'middle', fill: '#1e3340' });
+    txt(svg, ml, 14, 'DN', { 'font-size': 12, 'text-anchor': 'middle', fill: '#1e3340', 'font-weight': 700 });
+    el('polyline', { points: `${X(Llo)},${Y(0)} ${X(Lmin)},${Y(0)}`, stroke: '#999', 'stroke-dasharray': '4 3', 'stroke-width': 2, fill: 'none' }, svg);
+    el('polyline', { points: `${X(Lmin)},${Y(0)} ${X(Lmax)},${Y(DNmax)}`, stroke: '#176e71', 'stroke-width': 3, fill: 'none' }, svg);
+    el('polyline', { points: `${X(Lmax)},${Y(DNmax)} ${X(Lhi)},${Y(DNmax)}`, stroke: '#999', 'stroke-dasharray': '4 3', 'stroke-width': 2, fill: 'none' }, svg);
+    txt(svg, X(Lmax), Y(DNmax) - 6, 'Lmax (อิ่มตัว)', { 'font-size': 11, 'text-anchor': 'middle', fill: '#536c73' });
+    txt(svg, X(Lmin) + 4, Y(0) - 6, 'Lmin', { 'font-size': 11, fill: '#536c73' });
+    el('line', { x1: X(L), y1: Y(DN), x2: X(L), y2: H - mb, stroke: '#176e71', 'stroke-dasharray': '3 3' }, svg);
+    el('line', { x1: ml, y1: Y(DN), x2: X(L), y2: Y(DN), stroke: '#176e71', 'stroke-dasharray': '3 3' }, svg);
+    el('circle', { cx: X(L), cy: Y(DN), r: 6, fill: '#176e71' }, svg);
+    if (Number.isFinite(Lbad)) { const cx = X(Lbad), cy = Y(dn2); el('path', { d: `M${cx - 6},${cy - 6} L${cx + 6},${cy + 6} M${cx + 6},${cy - 6} L${cx - 6},${cy + 6}`, stroke: '#b3261e', 'stroke-width': 3 }, svg); txt(svg, cx + 8, cy - 8, 'ผิด', { 'font-size': 11, fill: '#b3261e' }); }
+    markVisit('m3');
+  }
+  function m3SensorRender() {
+    const s = RS.sensorDN(val('s-l'), val('s-g'), val('s-b'), 255);
+    $('s-dn').textContent = s.dn + (Math.abs(s.raw - s.dn) > 1e-9 ? ` (ค่าต่อเนื่อง ${fmt(s.raw, 2)})` : '');
+    $('s-state').textContent = s.state === 'high' ? 'อิ่มตัว: ค่าจริงเกิน 255' : s.state === 'low' ? 'ต่ำกว่า 0: ถูกตัดเป็น 0' : 'อยู่ในช่วง';
+  }
+  const E0 = 1550;
+  function hazeRender() {
+    const rho = val('h-rho'), elev = val('h-elev'), T = val('h-t'), Lp = val('h-lp'), d = val('h-d');
+    const E = RS.irradiance(E0, elev, d), Lt = RS.totalRadiance(rho, E, T, Lp), Lw = RS.totalRadiance(0, E, T, Lp);
+    const rhoRaw = Math.PI * Lt / (E * T), rhoDos = Math.PI * (Lt - Lw) / (E * T);
+    $('h-E').textContent = fmt(E, 1); $('h-Lt').textContent = fmt(Lt, 2); $('h-frac').textContent = fmt(100 * Lp / Lt, 1) + ' %';
+    $('h-rho-raw').textContent = fmt(rhoRaw, 4); $('h-rho-dos').textContent = fmt(rhoDos, 4); $('h-norm').textContent = fmt(Lt / Math.sin(elev * Math.PI / 180), 2);
+    const svg = $('h-svg'); svg.innerHTML = svg.querySelector('title').outerHTML + svg.querySelector('desc').outerHTML;
+    const defs = el('defs', {}, svg), pat = el('pattern', { id: 'hz', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    el('rect', { width: 6, height: 6, fill: '#f6dcc4' }, pat); el('line', { x1: 0, y1: 0, x2: 0, y2: 6, stroke: '#c2570c', 'stroke-width': 2 }, pat);
+    const bars = [['เป้าหมาย ดิบ', Lt - Lp, Lp], ['เป้าหมาย DOS', Lt - Lw, 0], ['น้ำ ดิบ', 0, Lw], ['น้ำ DOS', 0, 0]];
+    const max = Math.max(1, Lt) * 1.1, base = 180, top = 16, bw = 70;
+    el('line', { x1: 30, y1: base, x2: 450, y2: base, stroke: '#9fb3b2' }, svg);
+    bars.forEach(([lab, sig, hz], k) => {
+      const x = 50 + k * 102, hs = (sig / max) * (base - top), hh = (hz / max) * (base - top);
+      if (hs > 0) el('rect', { x, y: base - hs, width: bw, height: hs, fill: '#176e71' }, svg);
+      if (hh > 0) el('rect', { x, y: base - hs - hh, width: bw, height: hh, fill: 'url(#hz)', stroke: '#c2570c' }, svg);
+      txt(svg, x + bw / 2, base - hs - hh - 5, fmt(sig + hz, 1), { 'font-size': 12, 'text-anchor': 'middle', fill: '#1e3340' });
+      txt(svg, x + bw / 2, base + 16, lab, { 'font-size': 12, 'text-anchor': 'middle', fill: '#1e3340' });
+    });
+    txt(svg, 30, 210, 'สีทึบ = ρET/π (สัญญาณจากพื้นผิว) · ลายเฉียง = Lp (haze) · หน่วย W m⁻² sr⁻¹ µm⁻¹', { 'font-size': 11, fill: '#536c73' });
+    markVisit('m3');
+  }
+
+  /* ====================== MODULE 4 ====================== */
+  const CONT = [[20, 22, 25, 30, 34, 36], [21, 60, 62, 31, 35, 38], [23, 61, 200, 64, 36, 40], [26, 58, 63, 60, 39, 42], [30, 33, 36, 40, 44, 46], [33, 35, 39, 43, 47, 50]];
+  const CAT = [[1, 1, 2, 2, 2, 3], [1, 1, 2, 2, 3, 3], [1, 2, 2, 2, 3, 3], [1, 2, 2, 3, 3, 3], [2, 2, 2, 3, 3, 2], [2, 2, 3, 3, 2, 2]];
+  const CATN = { 1: 'น้ำ', 2: 'ป่า', 3: 'เมือง' }, CATL = { 1: 'W', 2: 'F', 3: 'U' }, CATC = { 1: '#8fb8de', 2: '#8cc084', 3: '#d9a07a' };
+  const rs = { r: 2, c: 2 };
+  function outToIn(r, c, sx, sy, rot) { const t = rot * Math.PI / 180, ox = c + 0.5 - 3, oy = r + 0.5 - 3; return [3 + ox * Math.cos(t) - oy * Math.sin(t) + sx, 3 + ox * Math.sin(t) + oy * Math.cos(t) + sy]; }
+  function m4Render() {
+    const sx = val('rs-sx'), sy = val('rs-sy'), rot = val('rs-rot'), m = radio('rs-m'), cat = radio('rs-d') === 'cat', F = cat ? CAT : CONT;
+    const out = [];
+    for (let r = 0; r < 6; r++) { out.push([]); for (let c = 0; c < 6; c++) { const [u, v] = outToIn(r, c, sx, sy, rot); const nn = RS.sampleNN(F, u, v), bl = RS.sampleBL(F, u, v); out[r].push({ u, v, nn, bl, val: m === 'nn' ? nn : (bl ? bl.value : null) }); } }
+    const svg = $('rs-svg'); svg.innerHTML = svg.querySelector('title').outerHTML + svg.querySelector('desc').outerHTML;
+    const cs = 34, ox1 = 20, oy = 34, ox2 = 280;
+    txt(svg, ox1, 22, 'Input (ก่อนแปลง)', { 'font-size': 13, fill: '#1e3340', 'font-weight': 700 });
+    txt(svg, ox2, 22, `Output (${m === 'nn' ? 'Nearest neighbour' : 'Bilinear'})`, { 'font-size': 13, fill: '#1e3340', 'font-weight': 700 });
+    const shade = v => { const g = Math.round(255 - Math.min(200, v) / 200 * 205); return `rgb(${g},${g},${g})`; };
+    const sel = out[rs.r][rs.c];
+    for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) {
+      const v = F[i][j];
+      const r = el('rect', { x: ox1 + j * cs, y: oy + i * cs, width: cs - 1, height: cs - 1, fill: cat ? CATC[v] : shade(v) }, svg);
+      if (m === 'bl' && sel.bl && i >= sel.bl.i0 && i <= sel.bl.i0 + 1 && j >= sel.bl.j0 && j <= sel.bl.j0 + 1) { r.setAttribute('stroke', '#e0681a'); r.setAttribute('stroke-width', 3); }
+      if (m === 'nn' && sel.nn !== null && i === Math.floor(sel.v) && j === Math.floor(sel.u)) { r.setAttribute('stroke', '#e0681a'); r.setAttribute('stroke-width', 3); }
+      txt(svg, ox1 + j * cs + cs / 2, oy + i * cs + cs / 2 + 4, cat ? CATL[v] : v, { 'font-size': 11, 'text-anchor': 'middle', fill: cat || v < 120 ? '#000' : '#fff' });
+    }
+    out.forEach((row, r) => row.forEach((o, c) => { if (o.u >= -0.5 && o.u <= 6.5 && o.v >= -0.5 && o.v <= 6.5) el('circle', { cx: ox1 + o.u * cs, cy: oy + o.v * cs, r: r === rs.r && c === rs.c ? 4.5 : 2.2, fill: r === rs.r && c === rs.c ? '#b3261e' : '#176e71' }, svg); }));
+    out.forEach((row, r) => row.forEach((o, c) => {
+      const has = o.val !== null, invalidCat = cat && has && Math.abs(o.val - Math.round(o.val)) > 1e-9;
+      const fill = !has ? '#f0f0f0' : cat ? (invalidCat ? '#fff' : CATC[o.val]) : shade(o.val);
+      const rect = el('rect', { x: ox2 + c * cs, y: oy + r * cs, width: cs - 1, height: cs - 1, fill, tabindex: 0, role: 'button', 'aria-label': `output แถว ${r} คอลัมน์ ${c}`, style: 'cursor:pointer' }, svg);
+      if (invalidCat) { rect.setAttribute('stroke', '#b3261e'); rect.setAttribute('stroke-width', 2); rect.setAttribute('stroke-dasharray', '3 2'); }
+      if (r === rs.r && c === rs.c) { rect.setAttribute('stroke', '#e0681a'); rect.setAttribute('stroke-width', 3); rect.removeAttribute('stroke-dasharray'); }
+      const pick = () => { rs.r = r; rs.c = c; m4Render(); };
+      rect.addEventListener('click', pick); rect.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      const label = !has ? '∅' : cat ? (invalidCat ? o.val.toFixed(1) + '?' : CATL[o.val]) : (m === 'nn' ? String(o.val) : o.val.toFixed(1));
+      txt(svg, ox2 + c * cs + cs / 2, oy + r * cs + cs / 2 + 4, label, { 'font-size': 10.5, 'text-anchor': 'middle', fill: invalidCat ? '#b3261e' : (!has || cat || o.val < 120 ? '#000' : '#fff') });
+    }));
+    $('rs-cell').textContent = `แถว ${rs.r}, คอลัมน์ ${rs.c}`;
+    $('rs-uv').textContent = `(${fmt(sel.u, 3)}, ${fmt(sel.v, 3)})`;
+    $('rs-nn').textContent = sel.nn === null ? 'NoData' : (cat ? `${sel.nn} (${CATN[sel.nn]})` : sel.nn);
+    $('rs-bl').textContent = sel.bl ? fmt(sel.bl.value, 3) : 'NoData';
+    if (sel.bl) { const b = sel.bl; $('rs-eq').innerHTML = `a = ${fmt(b.a, 3)}, b = ${fmt(b.b, 3)}<br>(1−a)(1−b)·${b.f[0]} + a(1−b)·${b.f[1]} + (1−a)b·${b.f[2]} + ab·${b.f[3]} = ${fmt(b.value, 3)}`; }
+    else $('rs-eq').textContent = 'cell นี้ตกนอกภาพ input → NoData';
+    const vals = arr => arr.filter(v => v !== null);
+    const inV = F.flat(), outV = vals(out.flat().map(o => o.val));
+    const st = a => a.length ? [Math.min(...a), Math.max(...a), a.reduce((s, v) => s + v, 0) / a.length] : [NaN, NaN, NaN];
+    const [i0, i1, i2] = st(inV), [o0, o1, o2] = st(outV);
+    const nInvalid = cat ? outV.filter(v => Math.abs(v - Math.round(v)) > 1e-9).length : 0;
+    $('rs-stats').innerHTML = `<tr><td>ค่าต่ำสุด</td><td>${fmt(i0, 1)}</td><td>${fmt(o0, 1)}</td></tr><tr><td>ค่าสูงสุด</td><td>${fmt(i1, 1)}</td><td>${fmt(o1, 1)}</td></tr><tr><td>ค่าเฉลี่ย</td><td>${fmt(i2, 2)}</td><td>${fmt(o2, 2)}</td></tr><tr><td>cell NoData</td><td>0</td><td>${36 - outV.length}</td></tr>` + (cat ? `<tr><td>class ที่ไม่มีอยู่จริง</td><td>0</td><td>${nInvalid}</td></tr>` : '');
+    const msg = $('rs-msg');
+    if (cat && m === 'bl') { msg.className = 'note bad'; msg.textContent = `Bilinear สร้างค่า class ที่ไม่มีอยู่จริง ${nInvalid} cell (กรอบประสีแดง) — ข้อมูลกลุ่มต้องใช้ NN`; }
+    else if (!cat && m === 'bl' && o1 < i1) { msg.className = 'note warn'; msg.textContent = `ค่าสูงสุดลดจาก ${fmt(i1, 0)} เป็น ${fmt(o1, 1)} — bilinear ทำให้ค่าสุดขั้วหาย`; }
+    else if (m === 'nn') { msg.className = 'note info'; msg.textContent = 'NN คัดลอกค่าจาก input มาทั้งค่า ค่าใน output ทุกค่ามีอยู่ใน input แต่ตำแหน่งอาจเลื่อนได้สูงสุดครึ่ง pixel'; }
+    else { msg.className = 'note info'; msg.textContent = 'แตะ cell ด้านขวาเพื่อดูน้ำหนักของ 4 pixel ที่ใช้คำนวณ'; }
+    markVisit('m4');
+  }
+
+  /* ====================== MODULE 5 ====================== */
+  const TYPES = [['', '— เลือก —'], ['geo', 'Geometric distortion'], ['cal', 'Radiometric: sensor calibration'], ['atm', 'Radiometric: atmosphere/haze'], ['enh', 'ใช้ค่า enhancement ผิดวัตถุประสงค์'], ['qc', 'QC: ไม่มีหลักฐานอิสระ (redundancy)']];
+  const SCEN = [
+    { t: 'S1 · ถนนไม่ทับกัน', s: 'ซ้อนภาพดาวเทียมกับชั้นถนนจากแผนที่ 1:50,000 ถนนในภาพเลื่อนไปทางตะวันออกประมาณ 40 m เท่ากันทั้งภาพ และหมุนเล็กน้อย', type: 'geo', apps: [['', '— เลือก —'], ['a', 'เลือก GCP ที่กระจายทั่วภาพ fit polynomial ลำดับ 1 แล้วตรวจด้วย check point'], ['b', 'ทำ histogram stretch ให้ถนนชัดขึ้น'], ['c', 'ใช้ polynomial ลำดับ 3 ด้วย GCP 10 จุดพอดี'], ['d', 'ลบค่า DN เหนือน้ำลึกออก']], app: 'a', lim: 'ถ้าพื้นที่มีความสูงต่างกันมาก polynomial แก้ relief displacement ไม่ได้ ต้องใช้ orthorectification ด้วย DEM · ลำดับ 3 กับ GCP 10 จุดพอดีมี r = 0 จึงไม่มีหลักฐานความแม่นยำ' },
+    { t: 'S2 · ภาพมีหมอกควัน', s: 'ภาพเดือนมีนาคมมีหมอกควัน contrast ต่ำ ค่าเหนืออ่างเก็บน้ำลึกในแบนด์ NIR ไม่เป็นศูนย์ แต่มีค่าใกล้เคียงกันทั้งภาพ ต้องการเปรียบเทียบกับภาพเดือนธันวาคมที่ฟ้าใส', type: 'atm', apps: [['', '— เลือก —'], ['a', 'ยืด contrast ทั้งสองภาพให้ดูเหมือนกัน'], ['b', 'แปลง DN เป็น radiance จาก metadata แล้วทำ dark object subtraction และ normalise มุมดวงอาทิตย์/ระยะ d'], ['c', 'resample ด้วย cubic convolution'], ['d', 'เพิ่ม GCP']], app: 'b', lim: 'DOS สมมติว่า haze สม่ำเสมอทั้งภาพและมีวัตถุที่ ρ ≈ 0 แก้เฉพาะ L_p ที่บวกเพิ่ม ไม่ได้แก้ T ถ้าต้องการ surface reflectance ที่เทียบกันได้จริงต้องใช้แบบจำลอง radiative transfer' },
+    { t: 'S3 · ค่า DN ที่ยืดแล้ว', s: 'เพื่อนร่วมทีมส่งไฟล์ GeoTIFF ที่ทำ linear stretch ให้ดูสวยแล้ว ไปคำนวณ radiance ด้วย L_min, L_max จาก metadata เพื่อเปรียบเทียบสองปี', type: 'enh', apps: [['', '— เลือก —'], ['a', 'ใช้ไฟล์นี้ได้ เพราะสูตรเป็นเส้นตรงเหมือนกัน'], ['b', 'คำนวณจาก DN ต้นฉบับ (Level-1) ด้วย metadata ของภาพนั้น ใช้ไฟล์ที่ยืดแล้วสำหรับดูภาพเท่านั้น'], ['c', 'คูณผลด้วย 255/180 เพื่อชดเชย'], ['d', 'ทำ bilinear resampling ก่อน']], app: 'b', lim: 'ถ้าไม่มีพารามิเตอร์ stretch ที่บันทึกไว้ (a, b และการ clip) จะย้อนกลับไปหา DN เดิมไม่ได้ และค่าที่ถูก clip ไปแล้วจะสูญหายถาวร' },
+    { t: 'S4 · RMSE = 0.00', s: 'ผู้รับจ้างส่งงาน geometric correction ด้วย polynomial ลำดับ 1 และ GCP 3 จุด รายงานว่า RMSE = 0.00 pixel “ภาพแม่นยำสมบูรณ์”', type: 'qc', apps: [['', '— เลือก —'], ['a', 'ยอมรับงาน เพราะ RMSE เป็นศูนย์'], ['b', 'ให้เปลี่ยนเป็น polynomial ลำดับ 2'], ['c', 'ขอ GCP เพิ่ม (r > 0) และ check point อิสระที่กระจายทั่วภาพ แล้วรายงาน RMSE ของ check point'], ['d', 'ให้ resample ใหม่ด้วย NN']], app: 'c', lim: 'r = 2n − 6 = 0 สมการจึงพอดีทุกจุดโดยอัตโนมัติ RMSE ของ GCP ใช้ประเมินได้เพียงความเข้ากันภายในแบบจำลอง ความแม่นยำจริงต้องวัดที่จุดที่ไม่ได้ใช้ fit' }];
+  const dlState = SCEN.map(() => ({ done: false, tries: 0 }));
+  function m5Build() {
+    const host = $('dl');
+    host.innerHTML = SCEN.map((s, k) => `<div class="scen" id="dl${k}"><h3 style="margin-top:0">${s.t}</h3><p>${s.s}</p>
+      <div class="row"><label>ประเภทปัญหา<select id="dl${k}-t">${TYPES.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></label>
+      <label>วิธีแก้<select id="dl${k}-a">${s.apps.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></label></div>
+      <label class="small" for="dl${k}-p" style="display:block;margin-top:8px">ทำนายผลหลังแก้ (เขียนสั้นๆ)</label><textarea id="dl${k}-p" style="width:100%;min-height:56px;border:1px solid var(--line);border-radius:10px;padding:8px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn primary" type="button" data-k="${k}">ตรวจ</button></div><div class="fb" id="dl${k}-fb" aria-live="polite"></div></div>`).join('');
+    host.querySelectorAll('button[data-k]').forEach(b => b.addEventListener('click', () => {
+      const k = +b.dataset.k, s = SCEN[k], t = $(`dl${k}-t`).value, a = $(`dl${k}-a`).value, p = $(`dl${k}-p`).value.trim(), fb = $(`dl${k}-fb`);
+      fb.className = 'fb show';
+      if (!t || !a || p.length < 5) { fb.className = 'fb show retry'; fb.innerHTML = '<span class="badge retry">RETRY</span>เลือกทั้งสองช่อง และเขียนคำทำนายก่อนกดตรวจ'; return; }
+      dlState[k].tries++;
+      const ok = t === s.type && a === s.app;
+      if (ok) dlState[k].done = true;
+      fb.className = 'fb show ' + (ok ? 'pass' : 'retry');
+      fb.innerHTML = ok ? `<span class="badge pass">PASS</span><b>ข้อจำกัด:</b> ${s.lim}` : `<span class="badge retry">RETRY</span>${t !== s.type ? 'ประเภทปัญหายังไม่ถูก ลองถามตัวเองว่า “ผิดที่ตำแหน่ง ผิดที่ค่า หรือผิดที่หลักฐาน”' : 'ระบุประเภทปัญหาถูกแล้ว แต่วิธีแก้นี้ไม่ได้แก้ที่สาเหตุ'}`;
+      const n = dlState.filter(x => x.done).length; $('dl-score').textContent = `${n} / 4`; $('nav-m5').textContent = n === 4 ? '✓' : n ? `${n}/4` : '';
+    }));
+  }
+
+  /* ====================== MODULE 6 — MASTERY ====================== */
+  const MQ = [
+    { id: 'Q1', lvl: 1, kind: 'mc', q: 'Geometric correction ต่างจาก radiometric correction อย่างไร?', opts: [['a', 'Geometric แก้ “ตำแหน่ง” ของ pixel ให้ตรงพิกัดแผนที่ ส่วน radiometric แก้ “ค่า” ของ pixel ให้สื่อปริมาณทางฟิสิกส์'], ['b', 'Geometric ใช้กับภาพจากเครื่องบินเท่านั้น ส่วน radiometric ใช้กับภาพดาวเทียม'], ['c', 'ทั้งสองแบบคือขั้นตอนเดียวกัน ต่างกันแค่ชื่อในซอฟต์แวร์'], ['d', 'Radiometric ทำให้ภาพคมขึ้น ส่วน geometric ทำให้ภาพสว่างขึ้น']], ans: 'a', hint: 'ย้อนดู module 1: ทุก pixel มีข้อมูลสองชนิด', why: 'ภาพหนึ่งภาพเป็นฟังก์ชัน DN(i, j) geometric correction แก้ส่วน (i, j) → (X, Y) ส่วน radiometric correction แก้ส่วน DN → L หรือ ρ ' },
+    { id: 'Q2', lvl: 1, kind: 'num', q: 'แบนด์หนึ่ง 8-bit มี L_min = 1.5, L_max = 11.5 และ pixel มี DN = 150 radiance L เท่าไร? (หน่วย W m⁻² sr⁻¹ µm⁻¹ ทศนิยม 2 ตำแหน่ง)', ans: 1.5 + 150 * 10 / 255, tol: 0.01, hint: 'L = L_min + DN·(L_max − L_min)/255', why: 'L = 1.5 + 150 × 10/255 = 7.38' },
+    { id: 'Q3', lvl: 1, kind: 'num', q: 'Sensor มี gain G = 1.6 DN ต่อหน่วย radiance และ offset B = 12 DN ถ้าเป้าหมายมี L = 40 จะบันทึก DN เท่าไร?', ans: 76, tol: 0.5, hint: 'DN = G·L + B', why: 'DN = 1.6 × 40 + 12 = 76' },
+    { id: 'Q4', lvl: 2, kind: 'mc', q: 'ต่อมา gain ของ sensor เสื่อมจาก 1.6 เหลือ 1.44 (B คงเดิม) แต่ผู้ประมวลผลยังใช้ G = 1.6 กับเป้าหมายเดิม (L = 40) ค่า L ที่คำนวณได้จะเป็นอย่างไร?', opts: [['a', 'เท่าเดิม เพราะ offset ไม่เปลี่ยน'], ['b', 'ต่ำกว่าความจริงประมาณ 9%'], ['c', 'สูงกว่าความจริงประมาณ 10%'], ['d', 'อิ่มตัวที่ 255']], ans: 'b', hint: 'คำนวณ DN ใหม่ด้วย G = 1.44 แล้วย้อนด้วย G = 1.6', why: 'DN = 1.44×40 + 12 = 69.6 → 70; L = (70 − 12)/1.6 = 36.25 ต่ำกว่าจริง 9.4% เหตุผลนี้ทำให้ sensor ต้องได้รับการสอบเทียบเป็นระยะ (vicarious calibration)' },
+    { id: 'Q5', lvl: 2, kind: 'mc', q: 'ทำไมการเปลี่ยนจาก NN เป็น cubic convolution จึง <b>ไม่</b> รับประกันว่าตำแหน่งในภาพจะแม่นยำขึ้น?', opts: [['a', 'เพราะ cubic convolution ใช้ GCP น้อยกว่า'], ['b', 'เพราะ resampling เพียงประมาณค่า DN ที่ตำแหน่งที่ transformation กำหนดไว้แล้ว ความแม่นยำเชิงตำแหน่งขึ้นกับ transformation และ GCP'], ['c', 'เพราะ cubic convolution ทำงานได้เฉพาะภาพ 8-bit'], ['d', 'ข้อนี้ผิด cubic แม่นยำกว่าเสมอทุกด้าน']], ans: 'b', hint: 'resampling ใช้ตำแหน่งพิกัดที่ได้จากขั้นใด?', why: 'ขั้น A (transformation) กำหนดตำแหน่ง ขั้น B (resampling) กำหนดค่า ถ้า A ผิด ทุกวิธีของ B ก็ผิดเท่ากัน “most accurate” เมื่อกล่าวถึงคุณภาพการประมาณค่า หมายถึงค่าที่ประมาณได้ ไม่ใช่ตำแหน่ง และ bilinear/cubic ยังเปลี่ยนค่า DN เดิมด้วย' },
+    { id: 'Q6', lvl: 3, kind: 'mc', q: 'สถานการณ์ใด <b>จำเป็น</b> ต้องทำ atmospheric correction มากที่สุด?', opts: [['a', 'ดูภาพวันเดียวด้วยตาเพื่อวาดขอบอาคาร'], ['b', 'เปรียบเทียบ reflectance ของนาข้าวจากภาพหลายวันและหลาย sensor เพื่อติดตามการเปลี่ยนแปลง'], ['c', 'ทำ geometric correction ให้ภาพซ้อนกับแผนที่'], ['d', 'ทำ contrast stretch เพื่อพิมพ์ภาพ']], ans: 'b', why: 'เมื่อต้องเทียบค่าทางฟิสิกส์ข้ามเวลาหรือข้ามสภาพบรรยากาศ ผลของ L_p และ T ต่างกันในแต่ละภาพจึงต้องถูกแยกออก  งานแปลภาพด้วยตาภาพเดียวอาจไม่จำเป็น' },
+    { id: 'Q7', lvl: 3, kind: 'mc', q: 'Dark object subtraction ในแบบจำลองนี้ตั้งสมมติฐานใดบ้าง?', opts: [['a', 'มีวัตถุที่ ρ ≈ 0 ในแบนด์นั้น, haze สม่ำเสมอทั้งภาพ และผลของบรรยากาศเป็นการบวกเพิ่ม (ไม่ได้แก้ T)'], ['b', 'ภาพต้องผ่าน geometric correction ด้วย polynomial ลำดับ 3'], ['c', 'transmittance T = 0 ทั้งภาพ'], ['d', 'ทุกแบนด์มี path radiance เท่ากัน']], ans: 'a', why: 'DOS ลบค่าคงที่ค่าเดียวที่วัดได้เหนือวัตถุมืด จึงต้องมีวัตถุมืดจริง haze ต้องสม่ำเสมอ และแก้ได้เฉพาะส่วน L_p ในขณะที่ L_p ยังต่างกันตามความยาวคลื่น (แต่ละแบนด์ต้องหาแยกกัน)' },
+    { id: 'Q8', lvl: 3, kind: 'mc', q: '<b>Transfer:</b> คุณตรวจรับ orthophoto จาก UAV พบ RMSE ที่ GCP (8 จุด) = 0.8 cm และ RMSE ที่ check point อิสระ (12 จุด) = 6.5 cm ควรรายงานความถูกต้องเชิงตำแหน่งเป็นค่าใด?', opts: [['a', '0.8 cm เพราะ GCP วัดด้วย GNSS RTK'], ['b', 'ค่าเฉลี่ยของทั้งสองค่า'], ['c', '6.5 cm เพราะ check point ไม่ได้ใช้ในการ fit จึงเป็นหลักฐานอิสระ'], ['d', 'รายงานไม่ได้จนกว่าจะเพิ่ม GCP เป็น 20 จุด']], ans: 'c', why: 'RMSE ที่ GCP แสดงความเข้ากันภายในแบบจำลอง (ยิ่งแบบจำลองยืดหยุ่นยิ่งเล็ก) ส่วน RMSE ที่ check point วัดความแม่นยำที่จุดซึ่งแบบจำลองไม่เคยเห็น หลักเดียวกับ module 2 และการรายงานตามแนวทาง ASPRS' }];
+  const mgState = MQ.map(() => ({ tries: 0, ok: false, first: null, ans: '', reason: '' }));
+  function m6Build() {
+    const host = $('mg');
+    host.innerHTML = MQ.map((q, k) => `<div class="q" id="mq${k}"><div class="lvl">${q.id} · ระดับ ${q.lvl} ${q.lvl === 1 ? '(มี hint)' : q.lvl === 2 ? '(hint หลังตอบผิด)' : '(ไม่มี hint)'}</div><h3>${q.q}</h3>
+      ${q.kind === 'mc' ? q.opts.map(([v, l]) => `<label class="opt"><input type="radio" name="mq${k}" value="${v}"><span>${l}</span></label>`).join('') : `<input class="num" type="number" inputmode="decimal" step="any" id="mq${k}-n" aria-label="คำตอบตัวเลข ${q.id}">`}
+      <label class="small" for="mq${k}-r" style="display:block;margin-top:8px">เหตุผลของคุณ (ต้องเขียนก่อนตรวจ)</label><textarea id="mq${k}-r"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn primary" type="button" data-k="${k}" data-act="check">ตรวจ</button>${q.lvl === 1 ? `<button class="btn" type="button" data-k="${k}" data-act="hint">Hint</button>` : ''}</div>
+      <div class="hint" id="mq${k}-h">${q.hint || ''}</div><div class="fb" id="mq${k}-fb" aria-live="polite"></div></div>`).join('');
+    host.querySelectorAll('button[data-act]').forEach(b => b.addEventListener('click', () => {
+      const k = +b.dataset.k, q = MQ[k], st = mgState[k];
+      if (b.dataset.act === 'hint') { $(`mq${k}-h`).classList.add('show'); return; }
+      const fb = $(`mq${k}-fb`), reason = $(`mq${k}-r`).value.trim();
+      let given = q.kind === 'mc' ? ((document.querySelector(`input[name="mq${k}"]:checked`) || {}).value || '') : $(`mq${k}-n`).value.trim();
+      if (!given) { fb.className = 'fb show retry'; fb.innerHTML = '<span class="badge retry">RETRY</span>ยังไม่ได้เลือกหรือกรอกคำตอบ'; return; }
+      if (reason.length < 10) { fb.className = 'fb show retry'; fb.innerHTML = '<span class="badge retry">RETRY</span>เขียนเหตุผลอย่างน้อยหนึ่งประโยคก่อนตรวจ'; return; }
+      let ok;
+      if (q.kind === 'num') { const v = parseFloat(given.replace(',', '.')); if (!Number.isFinite(v)) { fb.className = 'fb show retry'; fb.innerHTML = '<span class="badge retry">RETRY</span>คำตอบต้องเป็นตัวเลข'; return; } ok = Math.abs(v - q.ans) <= q.tol; }
+      else ok = given === q.ans;
+      st.tries++; if (st.first === null) st.first = ok; st.ok = st.ok || ok; st.ans = given; st.reason = reason;
+      fb.className = 'fb show ' + (ok ? 'pass' : 'retry');
+      fb.innerHTML = ok ? `<span class="badge pass">PASS</span>${q.why}` : `<span class="badge retry">RETRY</span>ยังไม่ถูก ลองคิดใหม่จากกลไก${q.lvl === 2 ? ` · <b>Hint:</b> ${q.hint}` : ''}${q.lvl === 3 && st.tries >= 2 ? ` · <b>ทบทวน:</b> ${q.why}` : ''}`;
+      mgSummary();
+    }));
+  }
+  function mgSummary() {
+    const first = mgState.filter(s => s.first === true).length, done = mgState.filter(s => s.ok).length;
+    $('mg-first').textContent = `${first} / 8`; $('mg-done').textContent = `${done} / 8`;
+    const started = mgState.some(s => s.tries > 0);
+    const pass = done === 8 && first >= 6 && mgState[1].ok && mgState[2].ok;
+    $('mg-state').textContent = !started ? 'ยังไม่เริ่ม' : pass ? 'PASS (รอ Claude ตรวจเหตุผล)' : done === 8 ? 'RETRY: ถูกครั้งแรกน้อยกว่า 6' : 'กำลังทำ';
+    $('nav-m6').textContent = pass ? '✓' : started ? `${done}/8` : '';
+  }
+  function exportSummary() {
+    const lines = ['IXLS-GEOLEARN-RS-L04 · ผล Mastery Gate จากหน้า HTML', `เวลา: ${new Date().toISOString()}`, ''];
+    MQ.forEach((q, k) => { const s = mgState[k]; lines.push(`${q.id} [ระดับ ${q.lvl}] ตอบ: ${s.ans || '-'} | ถูก: ${s.ok ? 'ใช่' : 'ไม่'} | ครั้งแรกถูก: ${s.first === null ? '-' : s.first ? 'ใช่' : 'ไม่'} | จำนวนครั้ง: ${s.tries}`); lines.push(`   เหตุผล: ${s.reason || '-'}`); });
+    lines.push('', 'Decision Lab:'); SCEN.forEach((s, k) => lines.push(`${s.t}: ${dlState[k].done ? 'PASS' : 'ยังไม่ผ่าน'} (${dlState[k].tries} ครั้ง) | ทำนาย: ${$(`dl${k}-p`).value.trim() || '-'}`));
+    lines.push('', `สรุป: ถูกครั้งแรก ${mgState.filter(s => s.first === true).length}/8, ผ่าน ${mgState.filter(s => s.ok).length}/8, สถานะ ${$('mg-state').textContent}`);
+    $('mg-out').value = lines.join('\n');
+  }
+  $('mg-export').addEventListener('click', exportSummary);
+  $('mg-copy').addEventListener('click', async () => {
+    if (!$('mg-out').value) exportSummary();
+    try { await navigator.clipboard.writeText($('mg-out').value); $('mg-copy').textContent = 'คัดลอกแล้ว ✓'; }
+    catch (e) { $('mg-out').focus(); $('mg-out').select(); $('mg-copy').textContent = 'เลือกข้อความแล้ว กดคัดลอกเอง'; }
+  });
+
+  /* ====================== WIRE CONTROLS ====================== */
+  const m2 = () => { m2Render(); markVisit('m2'); };
+  ctrl('g-dx', 'เลื่อนแกน x (Δx)', -20, 20, 1, 10, 'px', 'translation ในทิศ x', m2);
+  ctrl('g-dy', 'เลื่อนแกน y (Δy)', -20, 20, 1, -4, 'px', 'translation ในทิศ y', m2);
+  ctrl('g-rot', 'หมุน (θ)', -15, 15, 0.5, 0, '°', 'หมุนรอบจุดกลาง (50, 50)', m2);
+  ctrl('g-scale', 'มาตราส่วน (s)', 0.9, 1.1, 0.01, 1, '', 'ผลของการเปลี่ยนความสูงแพลตฟอร์ม', m2);
+  ctrl('g-sigma', 'ความคลาดเคลื่อนการชี้ GCP (σ)', 0, 2, 0.1, 0.5, 'px', 'ส่วน random ที่แบบจำลองไม่รู้', m2);
+  ctrl('g-n', 'จำนวน GCP ที่ใช้ fit (n)', 3, 8, 1, 3, 'จุด', 'จุดที่เหลือเป็น check point', m2);
+  document.querySelectorAll('input[name="g-dist"],input[name="g-view"]').forEach(r => r.addEventListener('change', m2));
+  ['g-tx', 'g-ty'].forEach(id => $(id).addEventListener('input', m2Render));
+  $('g-reset').addEventListener('click', () => { ['g-dx', 'g-dy', 'g-rot', 'g-scale', 'g-sigma', 'g-n'].forEach(id => CTRL[id].set(CTRL[id].def)); document.querySelector('input[name="g-dist"][value="good"]').checked = true; document.querySelector('input[name="g-view"][value="raw"]').checked = true; $('g-tx').value = 20; $('g-ty').value = 30; m2Render(); });
+
+  ctrl('r-dn', 'DN ที่ sensor บันทึก', 0, 255, 1, 100, '', '', m3Render);
+  ctrl('r-lmin', 'L_min', -2, 10, 0.1, 2, 'W m⁻² sr⁻¹ µm⁻¹', 'radiance ที่ให้ DN = 0', m3Render);
+  ctrl('r-lmax', 'L_max', 3, 40, 0.1, 12, 'W m⁻² sr⁻¹ µm⁻¹', 'radiance ที่ทำให้ DN = DNmax', m3Render);
+  ctrl('r-a', 'Stretch: DN ขอบล่าง (a)', 0, 254, 1, 40, '', 'DN ≤ a จะแสดงเป็น 0', m3Render);
+  ctrl('r-b', 'Stretch: DN ขอบบน (b)', 1, 255, 1, 125, '', 'DN ≥ b จะแสดงเป็น DNmax', m3Render);
+  let prevMax = 255;
+  document.querySelectorAll('input[name="r-bits"]').forEach(r => r.addEventListener('change', () => {
+    const mx = +radio('r-bits'), f = mx / prevMax, keep = ['r-dn', 'r-a', 'r-b'].map(id => CTRL[id].get());
+    CTRL['r-dn'].setRange(0, mx); CTRL['r-a'].setRange(0, mx - 1); CTRL['r-b'].setRange(1, mx);
+    ['r-dn', 'r-a', 'r-b'].forEach((id, k) => CTRL[id].set(Math.round(keep[k] * f)));
+    prevMax = mx; m3Render(); }));
+  $('r-reset').addEventListener('click', () => { document.querySelector('input[name="r-bits"][value="255"]').checked = true; prevMax = 255; CTRL['r-dn'].setRange(0, 255); CTRL['r-a'].setRange(0, 254); CTRL['r-b'].setRange(1, 255); ['r-dn', 'r-lmin', 'r-lmax', 'r-a', 'r-b', 's-g', 's-b', 's-l', 'h-rho', 'h-elev', 'h-t', 'h-lp', 'h-d'].forEach(id => CTRL[id].set(CTRL[id].def)); m3Render(); m3SensorRender(); hazeRender(); });
+  ctrl('s-g', 'Gain G', 0.1, 5, 0.1, 2, 'DN/(W m⁻² sr⁻¹ µm⁻¹)', '', m3SensorRender);
+  ctrl('s-b', 'Offset B', -20, 40, 1, 10, 'DN', '', m3SensorRender);
+  ctrl('s-l', 'Radiance L', 0, 150, 0.5, 5, 'W m⁻² sr⁻¹ µm⁻¹', '', m3SensorRender);
+  ctrl('h-rho', 'Reflectance เป้าหมาย ρ', 0, 0.8, 0.01, 0.4, '', 'เช่น พืชในแบนด์ NIR', hazeRender);
+  ctrl('h-elev', 'มุมเงยดวงอาทิตย์', 10, 90, 1, 55, '°', 'θ₀ = 90° − มุมเงย', hazeRender);
+  ctrl('h-t', 'Transmittance T', 0.5, 1, 0.01, 0.85, '', '', hazeRender);
+  ctrl('h-lp', 'Path radiance L_p', 0, 40, 0.5, 12, '', 'haze (W m⁻² sr⁻¹ µm⁻¹)', hazeRender);
+  ctrl('h-d', 'ระยะโลก–ดวงอาทิตย์ d', 0.983, 1.017, 0.001, 1, 'AU', 'ม.ค. ≈ 0.983, ก.ค. ≈ 1.017', hazeRender);
+
+  ctrl('rs-sx', 'เลื่อน output ในแกน x', -1, 1, 0.05, 0.3, 'pixel', '', m4Render);
+  ctrl('rs-sy', 'เลื่อน output ในแกน y', -1, 1, 0.05, 0.4, 'pixel', '', m4Render);
+  ctrl('rs-rot', 'หมุน output', -30, 30, 1, 10, '°', '', m4Render);
+  document.querySelectorAll('input[name="rs-m"],input[name="rs-d"]').forEach(r => r.addEventListener('change', m4Render));
+  $('rs-reset').addEventListener('click', () => { ['rs-sx', 'rs-sy', 'rs-rot'].forEach(id => CTRL[id].set(CTRL[id].def)); document.querySelector('input[name="rs-m"][value="nn"]').checked = true; document.querySelector('input[name="rs-d"][value="cont"]').checked = true; rs.r = 2; rs.c = 2; m4Render(); });
+
+  m1Render(); m2Render(); m3Render(); m3SensorRender(); hazeRender(); m4Render(); m5Build(); m6Build(); mgSummary();
+  Object.keys(progress).forEach(k => { progress[k] = false; $('nav-' + k).textContent = ''; });
+  const s = $('js-status'); s.className = 'status ok'; s.textContent = '✓ JavaScript ทำงาน — ทุก module พร้อมใช้งาน';
+})();
+</script>
+<!--IX-CAP005:BEGIN tail-->
+<script type="application/json" id="ix-glossary">{"lesson": "rs-l04", "version": "0.2.0-publicsafe.1", "language": "th", "method": "curated glossary (hand-written, source-anchored); no frequency scoring", "source_document": {"public_context": "Original teaching reference is not distributed; public references are provided in the lesson."}, "review_policy": "Approved original glossary SHA256 9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c (2026-10-26); edited public-safe derivative needs final owner editorial confirmation.", "terms": [{"id": "radiometric-correction", "en": "Radiometric Correction", "th": "การแก้ความคลาดเคลื่อนเชิงรังสี", "match_en": ["radiometric correction"], "match_th": ["การแก้ความคลาดเคลื่อนเชิงรังสี"], "beginner": "แก้ “ค่า” ของ pixel ให้มีความหมายทางฟิสิกส์ ขั้นแรกแปลงตัวเลขดิบ (DN) เป็นปริมาณแสงที่มาถึง sensor แล้วจึงแก้ผลของมุมดวงอาทิตย์และบรรยากาศ ค่าที่ได้จากขั้นแรกคือแสงที่ sensor รับได้ ยังไม่ใช่ค่าการสะท้อนของพื้นผิว การแก้แบบนี้ไม่ได้ย้ายตำแหน่งของ pixel", "advanced": "กระบวนการแก้เชิงรังสีแบ่งได้เป็น (1) calibration แปลง DN เป็น at-sensor spectral radiance ด้วยค่าปรับเทียบของ sensor (L = (DN − B)/G); (2) การหาค่า TOA reflectance ซึ่งสัมพันธ์กับ geometry ของดวงอาทิตย์และพารามิเตอร์ใน metadata; (3) atmospheric correction เพื่อประเมิน surface reflectance · ขั้น (1) และ (2) ไม่ได้ตัดผลของบรรยากาศ ค่า TOA reflectance จึงยังมี path radiance · สำหรับผลิตภัณฑ์ Landsat บางชนิด ใช้ reflectance rescaling factors (M_ρ, A_ρ) กับ DN (Q_cal) ได้โดยตรง โดยต้องพิจารณาการแก้มุมดวงอาทิตย์", "equation": "L = (DN − B)/G   [W m⁻² sr⁻¹ µm⁻¹] ;   ρ_TOA = (M_ρ·Q_cal + A_ρ)/cos θ_SZ   [ไม่มีหน่วย]", "links": [{"href": "#m3", "label": "ลองใน Module 3"}], "sources": ["USGS — Using USGS Landsat Level-1 Data Product (https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product)"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "geometric-correction", "en": "Geometric Correction / Rectification", "th": "การแก้ความคลาดเคลื่อนเชิงเรขาคณิต", "match_en": ["geometric correction", "geometric rectification"], "match_th": ["การแก้ความคลาดเคลื่อนเชิงเรขาคณิต"], "beginner": "ย้ายแต่ละ pixel ไปไว้ตรงตำแหน่งจริงบนแผนที่ หลังย้ายแล้วต้องหาค่าของ pixel ในตำแหน่งใหม่ (resampling) ซึ่งอาจทำให้ค่าเปลี่ยนไปจากเดิม ภาพที่วางได้ถูกตำแหน่งจึงไม่ได้แปลว่าค่าความสว่างยังเหมือนต้นฉบับ", "advanced": "มีสองส่วน (A) transformation: หาความสัมพันธ์ระหว่างพิกัดแผนที่ (X, Y) กับพิกัดภาพ (x, y) โดย systematic distortion ใช้แบบจำลองที่สอดคล้องกับ sensor ส่วนส่วนที่เหลืออาจใช้ polynomial จาก GCP ด้วย least squares (B) resampling: ประมาณค่า pixel ณ จุด output ที่หาได้จาก transformation · ความถูกต้องเชิงตำแหน่ง (spatial accuracy) ขึ้นกับส่วน A และประเมินด้วย check point อิสระ ส่วนความคงเดิมของค่า pixel (radiometric fidelity) ขึ้นกับส่วน B: NN คงค่าตัวอย่างเดิม แต่เลือกตำแหน่ง sample ที่ใกล้ที่สุด ส่วน bilinear/cubic สร้างค่าใหม่ · ความคลาดเคลื่อนจาก relief displacement ต้องพิจารณา orthorectification ร่วมกับ DEM ไม่ใช่อาศัย polynomial แบบ 2 มิติเพียงอย่างเดียว", "equation": "x = a₁ + a₂X + a₃Y + u ,  y = b₁ + b₂X + b₃Y + v   [x, y: pixel ; X, Y: หน่วยแผนที่]", "links": [{"href": "#m2", "label": "ลองใน Module 2"}, {"href": "#mv", "label": "ดูกลไกการกวาดภาพ (2A)"}, {"href": "#m4", "label": "ผลของ resampling (Module 4)"}], "sources": ["หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "resampling", "en": "Resampling", "th": "การหาค่า pixel ใหม่หลังแปลงพิกัด", "match_en": ["resampling", "resample"], "match_th": [], "beginner": "หลังจัดภาพใหม่แล้ว กึ่งกลางของ pixel ใหม่มักไม่ตรงกับ pixel เดิม จึงต้องเลือกหรือประมาณค่าจาก pixel รอบข้าง", "advanced": "เมื่อ transformation กำหนดตำแหน่งของ output ในระบบพิกัด input แล้ว จึงประมาณค่าจาก pixel ข้างเคียง: nearest neighbour ใช้ค่าของ pixel ใกล้ที่สุด, bilinear เฉลี่ยถ่วงน้ำหนักจาก 4 pixel และ cubic convolution ใช้ 16 pixel ตามวิธีมาตรฐาน · resampling ไม่ได้เพิ่มความถูกต้องเชิงตำแหน่งของ transformation · cubic อาจให้ผลการประมาณค่าที่เรียบกว่าในบางสถานการณ์ แต่ไม่เท่ากับความถูกต้องเชิงตำแหน่ง · bilinear และ cubic สร้างค่าใหม่ ไม่เหมาะกับข้อมูลประเภท class label ที่เป็นกลุ่มไม่ต่อเนื่อง", "equation": "f(u,v) ≈ (1−a)(1−b)f₀₀ + a(1−b)f₁₀ + (1−a)b·f₀₁ + ab·f₁₁ ,  a, b ∈ [0, 1)", "links": [{"href": "#m4", "label": "ลองใน Module 4"}], "sources": ["หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "gcp", "en": "Ground Control Point (GCP)", "th": "จุดควบคุมภาคพื้นดิน", "match_en": ["ground control points", "ground control point", "gcps", "gcp"], "match_th": ["จุดควบคุมภาคพื้นดิน"], "beginner": "จุดที่มองเห็นชัดทั้งในภาพและรู้พิกัดจริงบนพื้น เช่น สี่แยกหรือมุมอาคาร ใช้เป็นหมุดยึดภาพเข้ากับแผนที่", "advanced": "คู่ค่าสังเกต (X, Y) ↔ (x, y) ที่ใช้ประมาณสัมประสิทธิ์ของ transformation จำนวนขั้นต่ำสำหรับ polynomial ลำดับ 1, 2 และ 3 คือ 3, 6 และ 10 จุดตามลำดับ โดยต้องกระจายพื้นที่อย่างเหมาะสม · ควรมีจำนวนเกินขั้นต่ำเพื่อให้ redundancy และไม่ควรอยู่บนเส้นตรงเดียวกัน · ประเมินความแม่นยำกับ check point อิสระที่ไม่ได้ใช้ในการ fit", "equation": "จำนวนสัมประสิทธิ์ต่อแกน = (k+1)(k+2)/2  →  k = 1, 2, 3 : 3, 6, 10", "links": [{"href": "#m2", "label": "ลองใน Module 2"}], "sources": ["ASPRS — Positional Accuracy Standards for Digital Geospatial Data, Edition 2 (2024) (https://www.asprs.org/ItemDetail?Category=PUB&WebsiteKey=e8e7bedc-f8a0-4a72-9989-95fd785baf8a&iProductCode=PAS2024)"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "check-point", "en": "Check Point", "th": "จุดตรวจสอบอิสระ", "match_en": ["check points", "check point"], "match_th": [], "beginner": "จุดที่รู้พิกัดจริงแต่ไม่ได้นำไปใช้ปรับภาพ ใช้ตรวจว่าภาพที่แก้แล้วแม่นยำจริงหรือไม่", "advanced": "Residual ที่ check point เป็นหลักฐานอิสระของความถูกต้องเชิงตำแหน่ง ต่างจาก residual ที่ GCP ซึ่งนำเข้าไปใช้ประมาณพารามิเตอร์ของแบบจำลอง · เมื่อจำนวนค่าสังเกตเท่ากับจำนวนตัวไม่ทราบค่า อาจได้ residual ของ GCP เป็นศูนย์ แต่ไม่ได้รับประกันว่า check point จะไม่มีความคลาดเคลื่อน · การรายงานความถูกต้องควรระบุจำนวน การกระจาย และนิยามสถิติ RMSE อย่างชัดเจน", "equation": "RMSE_r = √( Σ(vx² + vy²) / n_CP )   [หน่วยเดียวกับพิกัด]", "links": [{"href": "#m2", "label": "ลองใน Module 2"}], "sources": ["ASPRS — Positional Accuracy Standards for Digital Geospatial Data, Edition 2 (2024) (https://www.asprs.org/ItemDetail?Category=PUB&WebsiteKey=e8e7bedc-f8a0-4a72-9989-95fd785baf8a&iProductCode=PAS2024)"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "path-radiance", "en": "Path Radiance", "th": "radiance ที่เกิดจากการกระเจิงในบรรยากาศ", "match_en": ["path radiance"], "match_th": [], "beginner": "แสงที่ฝุ่นและโมเลกุลในอากาศกระเจิงเข้าสู่ sensor โดยไม่ได้มาจากพื้นผิวที่เรามอง ทำให้ภาพดูมีหมอกและ contrast ต่ำ", "advanced": "พจน์ L_p ที่บวกเพิ่มใน L_tot = ρET/π + L_p เป็นผลของรังสีที่กระเจิงผ่านบรรยากาศเข้าสู่ sensor ซึ่งอาจสร้าง haze และลด contrast · dark object subtraction ใช้ค่าที่สังเกตจากบริเวณที่มี reflectance ใกล้ศูนย์ในแบนด์นั้น เช่น น้ำลึกใสใน NIR เพื่อประมาณ L_p แล้วลบพจน์บวกออก · วิธีนี้ไม่ได้แก้ transmittance T และควรพิจารณาความแตกต่างตามช่วงความยาวคลื่น", "equation": "L_tot = ρ·E·T/π + L_p   [L: W m⁻² sr⁻¹ µm⁻¹ ; E: W m⁻² µm⁻¹ ; ρ, T: ไม่มีหน่วย]", "links": [{"href": "#m3", "label": "ลองใน Module 3 (ส่วน D)"}], "sources": ["หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "least-squares", "en": "Least Squares Adjustment", "th": "การปรับแก้ด้วยวิธีกำลังสองน้อยที่สุด", "match_en": ["least squares adjustment", "least squares", "least-squares"], "match_th": ["กำลังสองน้อยที่สุด"], "beginner": "เมื่อมีจุดวัดมากกว่าที่จำเป็น ให้เลือกคำตอบที่ทำให้ผลรวมกำลังสองของความคลาดเคลื่อนเล็กที่สุด", "advanced": "สำหรับแบบจำลองเชิงเส้น เขียนความสัมพันธ์ค่าสังเกตและค่าปรับแก้ได้เป็น A·x = B − v; ผลเฉลยแบบถ่วงน้ำหนักคือ x̂ = (AᵀPA)⁻¹AᵀPB เมื่อ normal matrix กลับเมทริกซ์ได้ และ σ̂₀² = vᵀPv / r โดย r = n_obs − n_unknown · ในตัวอย่างนี้ P = I และ affine 2 มิติมี r = 2n − 6 เมื่อ n คือจำนวน GCP; ถ้า r = 0 จะประมาณ variance factor หลังปรับแก้จาก residual ไม่ได้", "equation": "x̂ = (AᵀPA)⁻¹AᵀPB ,  v = B − A·x̂ ,  σ̂₀² = vᵀPv / r ,  r = 2n − 6", "links": [{"href": "#m2", "label": "ลองใน Module 2"}], "sources": ["หลักการ Remote Sensing / Photogrammetry / Adjustment Computations มาตรฐาน"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "dn", "en": "Digital Number (DN)", "th": "ค่าตัวเลขที่ sensor บันทึก", "match_en": ["dn"], "match_th": [], "beginner": "ตัวเลขจำนวนเต็มที่เก็บอยู่ในแต่ละ pixel เช่น 0–255 สำหรับภาพ 8-bit ตัวมันเองยังไม่มีหน่วยทางฟิสิกส์", "advanced": "Digital Number เป็นค่าตัวเลขหลังการแปลงสัญญาณและควอนไทซ์ ภายในช่วงที่ไม่มี saturation อาจอธิบายความสัมพันธ์กับ radiance เป็น DN = G·L + B เมื่อค่าสอบเทียบตรงกับ sensor และ band ที่ใช้ · สำหรับ Landsat Level-1 ค่า DN หรือ Q_cal ใช้กับ multiplicative/additive rescaling coefficients ที่ระบุใน metadata · ค่า DN จาก sensor หรือ band ต่างกันจึงไม่ควรเปรียบเทียบเชิงฟิสิกส์โดยตรงโดยไม่ปรับเทียบ", "equation": "DN = G·L + B   [DN: ไม่มีหน่วย ; G: DN ต่อ W m⁻² sr⁻¹ µm⁻¹]", "links": [{"href": "#m1", "label": "ดูใน Module 1"}, {"href": "#m3", "label": "Module 3"}], "sources": ["USGS — Using USGS Landsat Level-1 Data Product (https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product)"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}, {"id": "spectral-radiance", "en": "Spectral Radiance", "th": "ความเข้มรังสีต่อหน่วยความยาวคลื่น", "match_en": ["spectral radiance"], "match_th": [], "beginner": "ปริมาณแสงที่เดินทางมาจากทิศหนึ่งเข้าสู่ sensor คิดต่อพื้นที่ ต่อมุมตัน (ความกว้างของกรวยที่มอง) และต่อช่วงความยาวคลื่น ยังไม่ใช่ค่าการสะท้อนของพื้นผิว", "advanced": "กำลังรังสีต่อพื้นที่ฉายในแนวตั้งฉากกับทิศรังสี ต่อมุมตัน และต่อช่วงความยาวคลื่น: L_λ = d³Φ/(dA·cos θ·dΩ·dλ), หน่วย W m⁻² sr⁻¹ µm⁻¹ · หน่วย mW cm⁻² sr⁻¹ µm⁻¹ ในเอกสารบางฉบับเท่ากับ 10 W m⁻² sr⁻¹ µm⁻¹ · ค่า at-sensor spectral radiance รวมผลของบรรยากาศ จึงไม่ใช่ surface reflectance ซึ่งเป็นปริมาณไม่มีหน่วย", "equation": "L = L_min + DN·(L_max − L_min)/DN_max   [W m⁻² sr⁻¹ µm⁻¹]", "links": [{"href": "#m3", "label": "ลองใน Module 3"}], "sources": ["USGS — Using USGS Landsat Level-1 Data Product (https://www.usgs.gov/landsat-missions/using-usgs-landsat-level-1-data-product)"], "provenance": {"from_slides": [], "added": []}, "review": {"self": "REVISED_0.2.0", "owner": "PENDING_PUBLIC_SAFE_EDITORIAL_CONFIRMATION", "original_approved_glossary_sha256": "9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c", "science_status": "DEFINITION_REWORDED_SCIENCE_UNCHANGED_CLAIM_NOT_INDEPENDENTLY_SIGNED"}}]}</script>
+<script src="../../assets/ix-components/v0.2.0/jargon-lens.js"></script>
+<script src="../../assets/ix-components/v0.2.0/mechanism-viewer.js"></script>
+<!--IX-CAP005:END tail--></body>
+</html>

@@ -1,97 +1,76 @@
-# IXLS-006G: manual-only bootstrap for the existing TWO public lessons.
-# This is deliberately independent of the future L04 source and the 006F release guard.
-# It must be replaced with the reviewed full workflow before a separate L04 release.
+# IXLS 006F -- MANUAL-ONLY GitHub Pages release.
+# IMPORTANT: Owner must first switch Settings > Pages > Source to GitHub Actions
+# while keeping the current live site verified. Do not push to main while Pages
+# still uses "Deploy from a branch", as that push would automatically publish.
 name: IXLS Manual Pages Release
-
 on:
   workflow_dispatch:
     inputs:
       release_sha:
-        description: 'Full 40-character SHA of the main commit being released'
+        description: 'FULL 40-char approved commit SHA on main (must equal selected workflow SHA)'
         required: true
         type: string
       confirmation:
-        description: 'Type DEPLOY_PUBLIC to confirm publication of the two-lesson site'
+        description: 'Type DEPLOY_PUBLIC to acknowledge public publication'
         required: true
         type: string
 
 permissions:
   contents: read
-
 concurrency:
   group: ixls-pages-release
   cancel-in-progress: false
 
 jobs:
   build:
-    name: Verify the two-lesson baseline and build the public artifact
+    name: Verify and build allowlisted site
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.sha.outputs.value }}
     steps:
-      - name: Check manual approval and exact revision
+      - name: Validate full reviewed commit and explicit approval
         shell: bash
         env:
           REVIEWED_SHA: ${{ inputs.release_sha }}
-          CONFIRM: ${{ inputs.confirmation }}
+          OWNER_CONFIRM: ${{ inputs.confirmation }}
           EVENT_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          [[ "$REVIEWED_SHA" =~ ^[0-9a-fA-F]{40}$ ]] || { echo 'Full commit SHA required'; exit 1; }
-          [[ "$CONFIRM" == 'DEPLOY_PUBLIC' ]] || { echo 'Owner confirmation required'; exit 1; }
-          [[ "$(printf '%s' "$REVIEWED_SHA" | tr '[:upper:]' '[:lower:]')" == "$EVENT_SHA" ]] || { echo 'Approved SHA differs from GitHub commit'; exit 1; }
-      - name: Checkout the exact reviewed revision
+          [[ "$REVIEWED_SHA" =~ ^[a-fA-F0-9]{40}$ ]] || { echo 'Must provide full SHA'; exit 1; }
+          [[ "$OWNER_CONFIRM" == 'DEPLOY_PUBLIC' ]] || { echo 'Explicit confirmation required'; exit 1; }
+          [[ "${REVIEWED_SHA,,}" == "$EVENT_SHA" ]] || { echo 'Reviewed SHA differs from selected workflow commit'; exit 1; }
+      - name: Checkout exact reviewed commit
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Verify immutable legacy site and build allowlisted artifact
+      - name: Verify source hash and deployment policy
         shell: bash
-        env:
-          STAGE: ${{ runner.temp }}/ixls-two-lesson-site
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import hashlib, os, pathlib, shutil
-          root = pathlib.Path.cwd().resolve()
-          stage = pathlib.Path(os.environ['STAGE']).resolve()
-          expected = {
-              'index.html': 'd334f5fc5be1010213e2a3e804ba94e2469ce96ac90f978b04db5e11bf2854a7',
-              'lessons/gnss-epoch/index.html': '9f92eb7831d039fe73ee8cc4244afe58920ea36b44a40bc9c8855b193b71b372',
-              'lessons/newtons-cooling/index.html': 'fd9291a81e26be7237b366088443423b33f6b243dc3f488264dee95d8981b3e5',
-          }
-          if stage.exists():
-              raise RuntimeError('Stage directory already exists')
-          for rel, digest in expected.items():
-              path = root / rel
-              if path.is_symlink() or not path.is_file():
-                  raise RuntimeError(f'Missing or unsafe file: {rel}')
-              actual = hashlib.sha256(path.read_bytes()).hexdigest()
-              if actual != digest:
-                  raise RuntimeError(f'Unapproved content changed: {rel}; requires a new release workflow review')
-          html = (root / 'index.html').read_text(encoding='utf-8')
-          if html.count('class="lesson"') != 2 or 'lessons/rs-l04/' in html:
-              raise RuntimeError('Bootstrap release must contain exactly the original two lessons')
-          for rel in expected:
-              dest = stage / rel
-              dest.parent.mkdir(parents=True, exist_ok=True)
-              shutil.copyfile(root / rel, dest)
-              if hashlib.sha256(dest.read_bytes()).hexdigest() != expected[rel]:
-                  raise RuntimeError(f'Staged SHA mismatch: {rel}')
-          (stage / '.nojekyll').write_bytes(b'')
-          files = {p.relative_to(stage).as_posix() for p in stage.rglob('*') if p.is_file()}
-          assert files == set(expected) | {'.nojekyll'}, files
-          print('PASS: 3 existing HTML files, no L04, no private files, hash-pinned staging')
-          PY
-      - name: Configure Pages
+          python3 scripts/ixls_release.py verify --root .
+      - name: Test security and publishing guards
+        shell: bash
+        run: python3 -m unittest discover -s tests -p test_release_guard.py -v
+      - name: Stage only public files and verify links
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ixls_release.py build --root . --out "${RUNNER_TEMP}/ixls-site-stage"
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload the checked public artifact
+      - name: Upload exactly the checked artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ${{ runner.temp }}/ixls-two-lesson-site
+          path: ${{ runner.temp }}/ixls-site-stage
+      - name: Record release SHA
+        id: sha
+        shell: bash
+        run: echo "value=${GITHUB_SHA}" >> "${GITHUB_OUTPUT}"
 
   deploy:
-    name: Deploy only after manual trigger and environment approval
-    if: github.ref == 'refs/heads/main'
+    name: Deploy after manual trigger and environment approval
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -102,6 +81,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy the approved Pages artifact
+      - name: Deploy approved Pages artifact
         id: deployment
         uses: actions/deploy-pages@v4

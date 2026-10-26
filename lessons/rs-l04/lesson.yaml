@@ -1,0 +1,32 @@
+# IXLS-CAPABILITIES-005C — local candidate; owner review pending
+lesson_id: rs-l04
+course: "2108627 GEOIMAGE PROCESSING"
+lesson_version: 1.0.1-rc2-cap005c
+publication_status: candidate_not_released
+privacy: public_synthetic_candidate
+features:
+  jargon_lens:
+    optional: true
+    runtime: client_side
+    glossary: glossary.th.json
+    glossary_version: 0.2.0-publicsafe.1
+    exclude: ["#m5", "#m6", "#src", ".lvl"]
+    owner_review: APPROVED_EXACT_PUBLIC_SAFE_SHA256_2026_10_26
+    owner_approved_public_safe_sha256: 01a1e3052a8f03f31cf5796264bf548b7aec7d88d207ec506d2b63c3befde0da
+    owner_approved_original_sha256: 9a8b85c00d4e5289155d3c5159cdc0da1ec5fe12d8566dd22affdc4fdfb8289c
+    external_api: false
+  mechanism_viewer:
+    optional: true
+    runtime: svg_javascript
+    model: whiskbroom-scan
+    anatomy_skill_required: false
+    fallback: static_svg
+    reduced_motion: step
+acceptance:
+  chromium: LOCAL_CHROMIUM_INTEGRATION_86_86_AND_LIBRARY_82_82_PASS
+  ipad_safari: USER_CONFIRMED_PASS_OFFLINE_STANDALONE
+  ipad_chrome: USER_CONFIRMED_PASS_OFFLINE_STANDALONE
+  physical_test_scope: "User-confirmed interactive operation on iPad in both browsers; standalone HTML opened offline via shortcut. No independent device telemetry."
+  production_https: NOT_TESTED
+  public_content_owner_approval: A1_AND_B1_APPROVED_EXACT_PUBLIC_SAFE_GLOSSARY
+  license_owner_decision: C1_MIT_SCOPED_CODE_AND_D1_CONTENT_RIGHTS_RESERVED_APPROVED
